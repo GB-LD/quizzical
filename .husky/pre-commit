@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "🚀 Vérification pre-commit démarrée..."
+npx lint-staged || exit 1
+echo "✅ Pre-commit terminé avec succès !"
