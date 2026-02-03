@@ -6,6 +6,7 @@ describe("ENDPOINTS", () => {
     it("generates URL with default parameters", () => {
       const url = ENDPOINTS.quiz();
 
+      // Test simple
       expect(url).toBe(
         "https://opentdb.com/api.php?amount=10&category=11"
       );
