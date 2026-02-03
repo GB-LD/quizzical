@@ -33,10 +33,10 @@ export class QuizService {
       const errorMessages: Record<number, string> = {
         [ApiResponseCode.NO_RESULTS]:
           "Aucune question trouvée avec ces critères",
-        [ApiResponseCode.INVALID_PARAMETER]: "Paramètres invalide",
+        [ApiResponseCode.INVALID_PARAMETER]: "Paramètres invalides",
         [ApiResponseCode.TOKEN_NOT_FOUND]: "Session expirée",
-        [ApiResponseCode.TOKEN_EMPTY]: "Plus de questions disponnible",
-        [ApiResponseCode.RATE_LIMIT]: "Trop de requête, veuillez patienter",
+        [ApiResponseCode.TOKEN_EMPTY]: "Plus de questions disponibles",
+        [ApiResponseCode.RATE_LIMIT]: "Trop de requêtes, veuillez patienter",
       };
 
       const message =
@@ -71,11 +71,11 @@ export class QuizService {
     const category = this.decodeHtml(raw.category);
     const question = this.decodeHtml(raw.question);
     const correctAnswer = this.decodeHtml(raw.correct_answer);
-    const incorrectAnswer = raw.incorrect_answers.map((a) =>
+    const incorrectAnswers = raw.incorrect_answers.map((a) =>
       this.decodeHtml(a),
     );
 
-    const allOptions = [correctAnswer, ...incorrectAnswer];
+    const allOptions = [correctAnswer, ...incorrectAnswers];
     const shuffledOptions = this.shuffleArray(allOptions);
 
     return {

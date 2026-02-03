@@ -17,7 +17,7 @@ export class NetworkError extends Error {
   constructor(message = "Network error") {
     super(message);
     this.name = "NetworkError";
-    Object.setPrototypeOf(this, ApiError.prototype);
+    Object.setPrototypeOf(this, NetworkError.prototype);
   }
 }
 
@@ -27,7 +27,7 @@ export class ValidationError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "ValidationError";
-    Object.setPrototypeOf(this, ApiError.prototype);
+    Object.setPrototypeOf(this, ValidationError.prototype);
   }
 }
 
