@@ -11,8 +11,8 @@ export interface QuizQuestion {
 export interface QuizConfig {
   amount: number;
   category: number;
-  difficulty: "easy" | "medium" | "hard";
-  type: "multiple" | "boolean";
+  difficulty?: "easy" | "medium" | "hard";
+  type?: "multiple" | "boolean";
 }
 
 export interface QuizState {
