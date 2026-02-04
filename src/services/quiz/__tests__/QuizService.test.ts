@@ -212,7 +212,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Aucune question trouvée avec ces critères"
+        "No questions found with these criteria"
       );
     });
 
@@ -223,7 +223,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Paramètres invalides"
+        "Invalid parameters"
       );
     });
 
@@ -234,7 +234,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Session expirée"
+        "Session expired"
       );
     });
 
@@ -245,7 +245,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Plus de questions disponibles"
+        "No more questions available"
       );
     });
 
@@ -256,7 +256,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Trop de requêtes, veuillez patienter"
+        "Too many requests, please wait"
       );
     });
 
@@ -267,7 +267,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Erreur API: code 99"
+        "API Error: code 99"
       );
     });
 
@@ -278,7 +278,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Aucune question retournée par l'API"
+        "No questions returned by the API"
       );
     });
 
@@ -289,7 +289,7 @@ describe("QuizService", () => {
       });
 
       await expect(quizService.getQuiz(mockConfig)).rejects.toThrow(
-        "Aucune question retournée par l'API"
+        "No questions returned by the API"
       );
     });
   });

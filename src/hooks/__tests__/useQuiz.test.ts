@@ -3,7 +3,7 @@ import { renderHook, waitFor, act } from "@testing-library/react";
 import { ApiError, NetworkError, ValidationError } from "../../utils/errors";
 import type { QuizQuestion, QuizConfig } from "../../services/quiz";
 
-// Mock du service quiz
+// Mock quiz service
 vi.mock("../../services/quiz", async () => {
   const actual = await vi.importActual("../../services/quiz");
   return {
@@ -43,12 +43,12 @@ describe("useQuiz", () => {
     vi.clearAllMocks();
   });
 
-  describe("État initial", () => {
-    it("devrait avoir l'état initial correct", () => {
-      // When - Rendu du hook
+  describe("Initial state", () => {
+    it("should have the correct initial state", () => {
+      // When - Rendering the hook
       const { result } = renderHook(() => useQuiz());
 
-      // Then - Vérification de l'état initial
+      // Then - Verify initial state
       expect(result.current.questions).toEqual([]);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
@@ -56,25 +56,25 @@ describe("useQuiz", () => {
   });
 
   describe("loadQuiz", () => {
-    it("devrait charger les questions avec succès", async () => {
-      // Given - Configuration du mock
+    it("should load questions successfully", async () => {
+      // Given - Mock configuration
       (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
 
-      // When - Rendu et appel de loadQuiz
+      // When - Render and call loadQuiz
       const { result } = renderHook(() => useQuiz());
 
       await act(async () => {
         await result.current.loadQuiz();
       });
 
-      // Then - Vérifications
+      // Then - Verifications
       expect(result.current.questions).toEqual(mockQuestions);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
     });
 
-    it("devrait gérer l'état isLoading pendant le chargement", async () => {
-      // Given - Mock avec délai
+    it("should handle isLoading state during loading", async () => {
+      // Given - Mock with delay
       (quizService.getQuiz as Mock).mockImplementation(
         () =>
           new Promise((resolve) =>
@@ -84,21 +84,21 @@ describe("useQuiz", () => {
 
       const { result } = renderHook(() => useQuiz());
 
-      // When - Démarrage du chargement
+      // When - Start loading
       act(() => {
         result.current.loadQuiz();
       });
 
-      // Then - Vérification de l'état de chargement immédiat
+      // Then - Immediate loading state verification
       expect(result.current.isLoading).toBe(true);
 
-      // Attendre la fin du chargement
+      // Wait for loading to finish
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false);
       });
     });
 
-    it("devrait utiliser la config par défaut si non spécifiée", async () => {
+    it("should use default config if not specified", async () => {
       // Given
       (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
 
@@ -116,7 +116,7 @@ describe("useQuiz", () => {
       });
     });
 
-    it("devrait accepter une configuration personnalisée", async () => {
+    it("should accept a custom configuration", async () => {
       // Given
       const customConfig: QuizConfig = {
         amount: 5,
@@ -137,8 +137,8 @@ describe("useQuiz", () => {
     });
   });
 
-  describe("Gestion des erreurs", () => {
-    it("devrait gérer une erreur serveur (500)", async () => {
+  describe("Error handling", () => {
+    it("should handle a server error (500)", async () => {
       // Given
       const apiError = new ApiError("Server Error", 500);
       (quizService.getQuiz as Mock).mockRejectedValueOnce(apiError);
@@ -152,13 +152,13 @@ describe("useQuiz", () => {
 
       // Then
       expect(result.current.error).toBe(
-        "Le serveur rencontre des difficultés. Veuillez réessayer plus tard"
+        "The server is experiencing difficulties. Please try again later"
       );
       expect(result.current.isLoading).toBe(false);
       expect(result.current.questions).toEqual([]);
     });
 
-    it("devrait gérer une erreur 404", async () => {
+    it("should handle a 404 error", async () => {
       // Given
       const apiError = new ApiError("Not Found", 404);
       (quizService.getQuiz as Mock).mockRejectedValueOnce(apiError);
@@ -171,10 +171,10 @@ describe("useQuiz", () => {
       });
 
       // Then
-      expect(result.current.error).toBe("Ressource non trouvée");
+      expect(result.current.error).toBe("Resource not found");
     });
 
-    it("devrait gérer une erreur 429 (rate limit)", async () => {
+    it("should handle a 429 error (rate limit)", async () => {
       // Given
       const apiError = new ApiError("Too Many Requests", 429);
       (quizService.getQuiz as Mock).mockRejectedValueOnce(apiError);
@@ -188,11 +188,11 @@ describe("useQuiz", () => {
 
       // Then
       expect(result.current.error).toBe(
-        "Trop de requêtes. Veuillez patienter quelques instants."
+        "Too many requests. Please wait a few moments."
       );
     });
 
-    it("devrait gérer une erreur API avec autre code (non géré spécifiquement)", async () => {
+    it("should handle an API error with other code (not specifically handled)", async () => {
       // Given
       const apiError = new ApiError("Bad Request", 400);
       (quizService.getQuiz as Mock).mockRejectedValueOnce(apiError);
@@ -204,11 +204,11 @@ describe("useQuiz", () => {
         await result.current.loadQuiz();
       });
 
-      // Then - ApiError étend Error, donc le message inclut error.message
-      expect(result.current.error).toBe("Une erreur est survenue Bad Request");
+      // Then - ApiError extends Error, so the message includes error.message
+      expect(result.current.error).toBe("An error occurred Bad Request");
     });
 
-    it("devrait gérer une erreur réseau", async () => {
+    it("should handle a network error", async () => {
       // Given
       const networkError = new NetworkError("No connection");
       (quizService.getQuiz as Mock).mockRejectedValueOnce(networkError);
@@ -222,13 +222,13 @@ describe("useQuiz", () => {
 
       // Then
       expect(result.current.error).toBe(
-        "Problème de connexion. Vérifiez votre connexion internet"
+        "Connection problem. Check your internet connection"
       );
     });
 
-    it("devrait gérer une erreur de validation", async () => {
+    it("should handle a validation error", async () => {
       // Given
-      const validationError = new ValidationError("Champ invalide");
+      const validationError = new ValidationError("Invalid field");
       (quizService.getQuiz as Mock).mockRejectedValueOnce(validationError);
 
       const { result } = renderHook(() => useQuiz());
@@ -239,10 +239,10 @@ describe("useQuiz", () => {
       });
 
       // Then
-      expect(result.current.error).toBe("Champ invalide");
+      expect(result.current.error).toBe("Invalid field");
     });
 
-    it("devrait gérer une Error standard", async () => {
+    it("should handle a standard Error", async () => {
       // Given
       (quizService.getQuiz as Mock).mockRejectedValueOnce(new Error("Oops"));
 
@@ -254,12 +254,12 @@ describe("useQuiz", () => {
       });
 
       // Then
-      expect(result.current.error).toBe("Une erreur est survenue Oops");
+      expect(result.current.error).toBe("An error occurred Oops");
     });
 
-    it("devrait gérer une erreur inconnue (string)", async () => {
+    it("should handle an unknown error (string)", async () => {
       // Given
-      (quizService.getQuiz as Mock).mockRejectedValueOnce("erreur inconnue");
+      (quizService.getQuiz as Mock).mockRejectedValueOnce("unknown error");
 
       const { result } = renderHook(() => useQuiz());
 
@@ -269,10 +269,10 @@ describe("useQuiz", () => {
       });
 
       // Then
-      expect(result.current.error).toBe("Une erreur inattendue est survenue");
+      expect(result.current.error).toBe("An unexpected error occurred");
     });
 
-    it("devrait gérer une erreur inconnue (null)", async () => {
+    it("should handle an unknown error (null)", async () => {
       // Given
       (quizService.getQuiz as Mock).mockRejectedValueOnce(null);
 
@@ -284,24 +284,24 @@ describe("useQuiz", () => {
       });
 
       // Then
-      expect(result.current.error).toBe("Une erreur inattendue est survenue");
+      expect(result.current.error).toBe("An unexpected error occurred");
     });
   });
 
   describe("refetch", () => {
-    it("devrait recharger avec la même configuration", async () => {
+    it("should reload with the same configuration", async () => {
       // Given
       const customConfig: QuizConfig = { amount: 5, category: 9 };
       (quizService.getQuiz as Mock).mockResolvedValue(mockQuestions);
 
       const { result } = renderHook(() => useQuiz());
 
-      // Chargement initial avec config custom
+      // Initial load with custom config
       await act(async () => {
         await result.current.loadQuiz(customConfig);
       });
 
-      // Réinitialiser le mock pour voir si refetch l'appelle
+      // Reset mock to see if refetch calls it
       vi.mocked(quizService.getQuiz).mockClear();
       vi.mocked(quizService.getQuiz).mockResolvedValueOnce([]);
 
@@ -310,22 +310,22 @@ describe("useQuiz", () => {
         await result.current.refetch();
       });
 
-      // Then - Vérifier que la même config est utilisée
+      // Then - Verify the same config is used
       expect(quizService.getQuiz).toHaveBeenCalledWith(customConfig);
     });
 
-    it("devrait utiliser la config par défaut si loadQuiz n'a jamais été appelé", async () => {
+    it("should use default config if loadQuiz has never been called", async () => {
       // Given
       (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
 
       const { result } = renderHook(() => useQuiz());
 
-      // When - Refetch sans appel préalable à loadQuiz
+      // When - Refetch without previous loadQuiz call
       await act(async () => {
         await result.current.refetch();
       });
 
-      // Then - Vérifier que la config par défaut est utilisée
+      // Then - Verify default config is used
       expect(quizService.getQuiz).toHaveBeenCalledWith({
         amount: 10,
         category: 11,
@@ -334,9 +334,9 @@ describe("useQuiz", () => {
   });
 
   describe("clearError", () => {
-    it("devrait effacer l'erreur", async () => {
-      // Given - Créer une erreur d'abord
-      (quizService.getQuiz as Mock).mockRejectedValueOnce(new Error("Erreur"));
+    it("should clear the error", async () => {
+      // Given - Create an error first
+      (quizService.getQuiz as Mock).mockRejectedValueOnce(new Error("Error"));
 
       const { result } = renderHook(() => useQuiz());
 
@@ -355,7 +355,7 @@ describe("useQuiz", () => {
       expect(result.current.error).toBeNull();
     });
 
-    it("ne devrait rien faire si pas d'erreur", () => {
+    it("should do nothing if no error", () => {
       // Given
       const { result } = renderHook(() => useQuiz());
 
@@ -371,24 +371,24 @@ describe("useQuiz", () => {
     });
   });
 
-  describe("Séquence d'opérations", () => {
-    it("devrait pouvoir recharger après une erreur", async () => {
-      // Given - Première requête échoue
+  describe("Operation sequence", () => {
+    it("should be able to reload after an error", async () => {
+      // Given - First request fails
       (quizService.getQuiz as Mock)
-        .mockRejectedValueOnce(new Error("Première erreur"))
+        .mockRejectedValueOnce(new Error("First error"))
         .mockResolvedValueOnce(mockQuestions);
 
       const { result } = renderHook(() => useQuiz());
 
-      // Première tentative échoue
+      // First attempt fails
       await act(async () => {
         await result.current.loadQuiz();
       });
 
-      expect(result.current.error).toBe("Une erreur est survenue Première erreur");
+      expect(result.current.error).toBe("An error occurred First error");
       expect(result.current.questions).toEqual([]);
 
-      // When - Deuxième tentative réussit
+      // When - Second attempt succeeds
       await act(async () => {
         await result.current.loadQuiz();
       });
@@ -398,7 +398,7 @@ describe("useQuiz", () => {
       expect(result.current.questions).toEqual(mockQuestions);
     });
 
-    it("devrait réinitialiser les questions avant chaque nouveau chargement", async () => {
+    it("should reset questions before each new load", async () => {
       // Given
       (quizService.getQuiz as Mock)
         .mockResolvedValueOnce(mockQuestions)
@@ -411,21 +411,21 @@ describe("useQuiz", () => {
 
       const { result } = renderHook(() => useQuiz());
 
-      // Premier chargement réussi
+      // First successful load
       await act(async () => {
         await result.current.loadQuiz();
       });
 
       expect(result.current.questions).toHaveLength(2);
 
-      // When - Nouveau chargement
+      // When - New load
       act(() => {
         result.current.loadQuiz();
       });
 
-      // Then - Les questions devraient être vidées ou conservées selon l'implémentation
-      // En fait, dans useQuiz, les questions ne sont pas réinitialisées avant le nouveau chargement
-      // Elles sont seulement mises à jour après le succès
+      // Then - Questions should be cleared or kept depending on implementation
+      // In useQuiz, questions are not reset before new load
+      // They are only updated after success
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false);
       });

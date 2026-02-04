@@ -32,22 +32,22 @@ export class QuizService {
     if (data.response_code !== ApiResponseCode.SUCCESS) {
       const errorMessages: Record<number, string> = {
         [ApiResponseCode.NO_RESULTS]:
-          "Aucune question trouvée avec ces critères",
-        [ApiResponseCode.INVALID_PARAMETER]: "Paramètres invalides",
-        [ApiResponseCode.TOKEN_NOT_FOUND]: "Session expirée",
-        [ApiResponseCode.TOKEN_EMPTY]: "Plus de questions disponibles",
-        [ApiResponseCode.RATE_LIMIT]: "Trop de requêtes, veuillez patienter",
+          "No questions found with these criteria",
+        [ApiResponseCode.INVALID_PARAMETER]: "Invalid parameters",
+        [ApiResponseCode.TOKEN_NOT_FOUND]: "Session expired",
+        [ApiResponseCode.TOKEN_EMPTY]: "No more questions available",
+        [ApiResponseCode.RATE_LIMIT]: "Too many requests, please wait",
       };
 
       const message =
         errorMessages[data.response_code] ||
-        `Erreur API: code ${data.response_code}`;
+        `API Error: code ${data.response_code}`;
 
       throw new ValidationError(message);
     }
 
     if (!data.results || data.results.length === 0) {
-      throw new ValidationError("Aucune question retournée par l'API");
+      throw new ValidationError("No questions returned by the API");
     }
   }
 

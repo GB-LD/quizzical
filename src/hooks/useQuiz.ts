@@ -63,23 +63,23 @@ export function useQuiz(): UseQuizReturn {
 function getUserFrendlyErrorMessage(error: unknown): string {
   if (isApiError(error)) {
     if (error.status >= 500) {
-      return "Le serveur rencontre des difficultés. Veuillez réessayer plus tard";
+      return "The server is experiencing difficulties. Please try again later";
     }
     if (error.status === 404) {
-      return "Ressource non trouvée";
+      return "Resource not found";
     }
     if (error.status === 429) {
-      return "Trop de requêtes. Veuillez patienter quelques instants.";
+      return "Too many requests. Please wait a few moments.";
     }
   }
   if (isNetworkError(error)) {
-    return "Problème de connexion. Vérifiez votre connexion internet";
+    return "Connection problem. Check your internet connection";
   }
   if (isValidationError(error)) {
     return error.message;
   }
   if (error instanceof Error) {
-    return `Une erreur est survenue ${error.message}`;
+    return `An error occurred ${error.message}`;
   }
-  return "Une erreur inattendue est survenue";
+  return "An unexpected error occurred";
 }
