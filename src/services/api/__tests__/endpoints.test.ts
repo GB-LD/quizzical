@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ENDPOINTS } from "./endpoints";
+import { ENDPOINTS } from "../endpoints";
 
 describe("ENDPOINTS", () => {
   describe("quiz", () => {

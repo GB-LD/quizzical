@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vite
 
 describe("HttpClient", () => {
   // Import dynamically to avoid module caching issues
-  let httpClient: typeof import("./client").httpClient;
-  let ApiError: typeof import("../../utils/errors").ApiError;
-  let NetworkError: typeof import("../../utils/errors").NetworkError;
+  let httpClient: typeof import("../client").httpClient;
+  let ApiError: typeof import("../../../utils/errors").ApiError;
+  let NetworkError: typeof import("../../../utils/errors").NetworkError;
 
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -12,8 +12,8 @@ describe("HttpClient", () => {
 
     // Reset modules and re-import everything together
     vi.resetModules();
-    const clientModule = await import("./client");
-    const errorsModule = await import("../../utils/errors");
+    const clientModule = await import("../client");
+    const errorsModule = await import("../../../utils/errors");
 
     httpClient = clientModule.httpClient;
     ApiError = errorsModule.ApiError;

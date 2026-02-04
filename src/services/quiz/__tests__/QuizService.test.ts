@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { ApiResponseCode } from "../api/constants";
-import type { ApiQuizResponse } from "../api/types";
+import { ApiResponseCode } from "../../api/constants";
+import type { ApiQuizResponse } from "../../api/types";
 
 // Mock httpClient
-vi.mock("../api/client", () => ({
+vi.mock("../../api/client", () => ({
   httpClient: {
     get: vi.fn(),
   },
 }));
 
-import { httpClient } from "../api/client";
-import { QuizService } from "./QuizService";
+import { httpClient } from "../../api/client";
+import { QuizService } from "../QuizService";
 
 describe("QuizService", () => {
   let quizService: QuizService;
