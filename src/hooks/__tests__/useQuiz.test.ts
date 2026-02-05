@@ -14,7 +14,24 @@ vi.mock("../../services/quiz", async () => {
   };
 });
 
+// Mock storage service
+vi.mock("../../services/storage", () => ({
+  quizStorage: {
+    get: vi.fn(),
+    save: vi.fn(),
+    remove: vi.fn(),
+    hasData: vi.fn(),
+  },
+  quizConfigStorage: {
+    get: vi.fn(),
+    save: vi.fn(),
+    remove: vi.fn(),
+    hasData: vi.fn(),
+  },
+}));
+
 import { quizService } from "../../services/quiz";
+import { quizStorage, quizConfigStorage } from "../../services/storage";
 import { useQuiz } from "../useQuiz";
 
 describe("useQuiz", () => {
@@ -41,6 +58,9 @@ describe("useQuiz", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset storage mocks to return null (no cached data)
+    (quizStorage.get as Mock).mockReturnValue(null);
+    (quizConfigStorage.get as Mock).mockReturnValue(null);
   });
 
   describe("Initial state", () => {
@@ -52,6 +72,7 @@ describe("useQuiz", () => {
       expect(result.current.questions).toEqual([]);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
+      expect(result.current.hasCachedQuiz).toBe(false);
     });
   });
 
@@ -431,6 +452,188 @@ describe("useQuiz", () => {
       });
 
       expect(result.current.questions).toHaveLength(1);
+    });
+  });
+
+  describe("Cache integration", () => {
+    it("should initialize with cached questions if available", () => {
+      // Given
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue({ amount: 10, category: 11 });
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      // Then
+      expect(result.current.questions).toEqual(mockQuestions);
+      expect(result.current.hasCachedQuiz).toBe(true);
+    });
+
+    it("should use cached data when config matches", async () => {
+      // Given
+      const config = { amount: 10, category: 11 };
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue(config);
+      (quizService.getQuiz as Mock).mockResolvedValue([]);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz(config);
+      });
+
+      // Then - Should use cache, not call API
+      expect(quizService.getQuiz).not.toHaveBeenCalled();
+      expect(result.current.questions).toEqual(mockQuestions);
+    });
+
+    it("should fetch new data when config differs", async () => {
+      // Given
+      const cachedConfig = { amount: 5, category: 9 };
+      const newConfig = { amount: 10, category: 11 };
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue(cachedConfig);
+      (quizService.getQuiz as Mock).mockResolvedValue([mockQuestions[1]]);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz(newConfig);
+      });
+
+      // Then - Should call API with new config
+      expect(quizService.getQuiz).toHaveBeenCalledWith(newConfig);
+      expect(result.current.questions).toEqual([mockQuestions[1]]);
+    });
+
+    it("should save questions to storage after successful load", async () => {
+      // Given
+      (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      // Then
+      expect(quizStorage.save).toHaveBeenCalledWith(mockQuestions);
+      expect(quizConfigStorage.save).toHaveBeenCalledWith({ amount: 10, category: 11 });
+    });
+
+    it("should update hasCachedQuiz after successful load", async () => {
+      // Given
+      (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
+
+      const { result } = renderHook(() => useQuiz());
+
+      expect(result.current.hasCachedQuiz).toBe(false);
+
+      // When
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      // Then
+      expect(result.current.hasCachedQuiz).toBe(true);
+    });
+  });
+
+  describe("clearCache", () => {
+    it("should clear cache and reset state", async () => {
+      // Given - Load some data first
+      (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      expect(result.current.questions).toHaveLength(2);
+      expect(result.current.hasCachedQuiz).toBe(true);
+
+      // When
+      act(() => {
+        result.current.clearCache();
+      });
+
+      // Then
+      expect(quizStorage.remove).toHaveBeenCalled();
+      expect(quizConfigStorage.remove).toHaveBeenCalled();
+      expect(result.current.questions).toEqual([]);
+      expect(result.current.hasCachedQuiz).toBe(false);
+    });
+
+    it("should work even when no cache exists", () => {
+      // Given
+      const { result } = renderHook(() => useQuiz());
+
+      // When
+      act(() => {
+        result.current.clearCache();
+      });
+
+      // Then - Should not throw
+      expect(result.current.questions).toEqual([]);
+      expect(result.current.hasCachedQuiz).toBe(false);
+    });
+  });
+
+  describe("refetch with cache", () => {
+    it("should clear cache before refetching", async () => {
+      // Given
+      (quizService.getQuiz as Mock).mockResolvedValue(mockQuestions);
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      vi.mocked(quizService.getQuiz).mockClear();
+
+      // When
+      await act(async () => {
+        await result.current.refetch();
+      });
+
+      // Then
+      expect(quizStorage.remove).toHaveBeenCalled();
+      expect(quizConfigStorage.remove).toHaveBeenCalled();
+    });
+  });
+
+  describe("Request deduplication", () => {
+    it("should not make concurrent requests", async () => {
+      // Given
+      let resolveFirst: (value: QuizQuestion[]) => void;
+      const firstPromise = new Promise<QuizQuestion[]>((resolve) => {
+        resolveFirst = resolve;
+      });
+      (quizService.getQuiz as Mock).mockReturnValueOnce(firstPromise);
+
+      const { result } = renderHook(() => useQuiz());
+
+      // When - Start first request
+      act(() => {
+        result.current.loadQuiz();
+      });
+
+      // Try to start second request while first is in flight
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      // Then - Should only call API once
+      expect(quizService.getQuiz).toHaveBeenCalledTimes(1);
+
+      // Cleanup
+      resolveFirst!(mockQuestions);
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
     });
   });
 });

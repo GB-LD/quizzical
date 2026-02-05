@@ -2,38 +2,50 @@ import { useEffect } from "react";
 import { useQuiz } from "./hooks/useQuiz";
 
 function App() {
-  const { questions, isLoading, error, loadQuiz, refetch } = useQuiz();
+  const {
+    questions,
+    isLoading,
+    hasCachedQuiz,
+    error,
+    loadQuiz,
+    refetch,
+    clearCache,
+  } = useQuiz();
 
   useEffect(() => {
     loadQuiz({ amount: 10, category: 11 });
   }, [loadQuiz]);
 
-  if (isLoading) {
-    return (
-      <div>
-        <div aria-label="Chargement"></div>
-        <p>Chargement des questions...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div role="alert">
-        <p className="error-message">❌ {error}</p>
-        <button className="retry-btn" onClick={refetch}>
-          🔄 Réessayer
-        </button>
-      </div>
-    );
+  function handleNewQuiz(): void {
+    clearCache();
+    loadQuiz();
   }
 
   return (
-    <main>
-      {questions.map((q) => (
-        <div>{q.question}</div>
-      ))}
-    </main>
+    <>
+      {isLoading && (
+        <div>
+          <div aria-label="loading"></div>
+          <p>questions loading...</p>
+        </div>
+      )}
+      {error && (
+        <div role="alert">
+          <p className="error-message">❌ {error}</p>
+          <button className="retry-btn" onClick={refetch}>
+            🔄 Try again
+          </button>
+        </div>
+      )}
+      {questions.length > 0 && (
+        <main>
+          {questions.map((q) => (
+            <div key={q.id}>{q.question}</div>
+          ))}
+        </main>
+      )}
+      {hasCachedQuiz && <button onClick={handleNewQuiz}>New quiz</button>}
+    </>
   );
 }
 

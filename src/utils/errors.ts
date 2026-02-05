@@ -42,3 +42,11 @@ export function isNetworkError(error: unknown): error is NetworkError {
 export function isValidationError(error: unknown): error is ValidationError {
   return error instanceof ValidationError;
 }
+
+export const ERROR_MESSAGES = {
+  SERVER_ERROR:
+    "The server is experiencing difficulties. Please try again later",
+  NOT_FOUND: "Resource not found",
+  RATE_LIMIT: "Too many requests. Please wait a few moments.",
+  NETWORK_ERROR: "Connection problem. Check your internet connection",
+} as const;
