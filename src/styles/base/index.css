@@ -1,0 +1,72 @@
+@layer base {
+    :root {
+        /* -------- Couleurs -------- */
+
+        /* Base */
+        --token-color-background: oklch(97.6% 0.006 264.5);
+        --token-color-surface: oklch(100% 0 0);
+
+        /* Primary */
+        --token-color-primary: oklch(49.2% 0.108 272.9);
+        --token-color-primary-light: oklch(54.1% 0.09 285.3);
+        --token-color-primary-dark: oklch(33.7% 0.088 273.1);
+
+        /* States */
+        --token-color-selected: oklch(89.6% 0.036 277);
+        --token-color-correct: oklch(82% 0.101 150.3);
+        --token-color-incorrect: oklch(85% 0.069 18.6);
+
+        /* Decoration */
+        --token-color-blob-yellow: oklch(97.9% 0.053 101.6);
+        --token-color-blob-blue: oklch(93.4% 0.023 248.1);
+
+        /* Borders */
+        --token-color-border: oklch(90.4% 0.025 278.3);
+        --token-color-divider: oklch(90.4% 0.025 278.3);
+
+        /* -------- Typo -------- */
+
+        --token-font-family: "Karla", "Inter", sans-serif;
+
+        --token-font-size-xs: 0.75rem;
+        --token-font-size-sm: 0.875rem;
+        --token-font-size-base: 1rem;
+        --token-font-size-lg: 1.125rem;
+        --token-font-size-xl: 1.5rem;
+        --token-font-size-2xl: 2rem;
+
+        --token-font-weight-regular: 400;
+        --token-font-weight-medium: 500;
+        --token-font-weight-semibold: 600;
+        --token-font-weight-bold: 700;
+
+        --token-line-height-tight: 1.2;
+        --token-line-height-normal: 1.5;
+        --token-line-height-relaxed: 1.75;
+
+        /* -------- Spacing -------- */
+
+        --token-spacing-xs: 0.25rem;
+        --token-spacing-sm: 0.5rem;
+        --token-spacing-md: 1rem;
+        --token-spacing-lg: 1.5rem;
+        --token-spacing-xl: 2rem;
+        --token-spacing-2xl: 3rem;
+        --token-spacing-3xl: 4rem;
+
+        /* -------- Borders -------- */
+
+        --token-border-width-thin: 1px;
+        --token-border-width-medium: 2px;
+
+        --token-radius-sm: 0.5rem;
+        --token-radius-md: 0.625rem;
+        --token-radius-lg: 0.9375rem;
+        --token-radius-full: 9999px;
+
+        /* -------- Shadows -------- */
+
+        --token-shadow-sm: 0 2px 4px oklch(49.2% 0.108 272.9 / 0.1);
+        --token-shadow-md: 0 4px 12px oklch(49.2% 0.108 272.9 / 0.15);
+    }
+}

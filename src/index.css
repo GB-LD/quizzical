@@ -1,1 +1,60 @@
+/* Tailwind layers */
 @import "tailwindcss";
+
+/* Base - variables & reset */
+@import "./styles/base/index.css";
+
+/* Custom components */
+@import "./styles/components/answer.css";
+@import "./styles/components/button.css";
+
+@theme {
+    /* Colors */
+    --color-background: var(--token-color-background);
+    --color-surface: var(--token-color-surface);
+    --color-primary: var(--token-color-primary);
+    --color-primary-light: var(--token-color-primary-light);
+    --color-primary-dark: var(--token-color-primary-dark);
+    --color-selected: var(--token-color-selected);
+    --color-correct: var(--token-color-correct);
+    --color-incorrect: var(--token-color-incorrect);
+    --color-blob-yellow: var(--token-color-blob-yellow);
+    --color-blob-blue: var(--token-color-blob-blue);
+    --color-border: var(--token-color-border);
+    --color-divider: var(--token-color-divider);
+
+    /* Typo */
+    --font-sans: var(--token-font-family);
+
+    --text-xs: var(--token-font-size-xs);
+    --text-xs--line-height: var(--token-line-height-normal);
+    --text-sm: var(--token-font-size-sm);
+    --text-sm--line-height: var(--token-line-height-normal);
+    --text-base: var(--token-font-size-base);
+    --text-base--line-height: var(--token-line-height-normal);
+    --text-lg: var(--token-font-size-lg);
+    --text-lg--line-height: var(--token-line-height-normal);
+    --text-xl: var(--token-font-size-xl);
+    --text-xl--line-height: var(--token-line-height-tight);
+    --text-2xl: var(--token-font-size-2xl);
+    --text-2xl--line-height: var(--token-line-height-tight);
+
+    /* Spacing */
+    --spacing-xs: var(--token-spacing-xs);
+    --spacing-sm: var(--token-spacing-sm);
+    --spacing-md: var(--token-spacing-md);
+    --spacing-lg: var(--token-spacing-lg);
+    --spacing-xl: var(--token-spacing-xl);
+    --spacing-2xl: var(--token-spacing-2xl);
+    --spacing-3xl: var(--token-spacing-3xl);
+
+    /* Radius */
+    --radius-sm: var(--token-radius-sm);
+    --radius-md: var(--token-radius-md);
+    --radius-lg: var(--token-radius-lg);
+    --radius-full: var(--token-radius-full);
+
+    /* Shadow */
+    --shadow-sm: var(--token-shadow-sm);
+    --shadow-md: var(--token-shadow-md);
+}

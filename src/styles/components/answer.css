@@ -1,0 +1,56 @@
+@layer components {
+    .answer {
+        --_answer-bg: transparent;
+        --_answer-fg: var(--token-color-primary-dark);
+        --_answer-border: var(--token-color-border);
+
+        @apply inline-flex items-center justify-center;
+        @apply text-sm font-medium;
+        @apply cursor-pointer select-none;
+        @apply transition-all duration-150;
+
+        padding: var(--token-spacing-sm) var(--token-spacing-lg);
+        background-color: var(--_answer-bg);
+        color: var(--_answer-fg);
+        border: var(--token-border-width-thin) solid var(--_answer-border);
+        border-radius: var(--token-radius-full);
+    }
+
+    .answer:hover:not(.answer-selected):not(.answer-correct):not(
+            .answer-incorrect
+        ) {
+        --_answer-bg: var(--token-color-selected);
+        --_answer-border: transparent;
+    }
+
+    .answer:active {
+        @apply scale-[0.98];
+    }
+
+    .answer:focus-visible {
+        @apply outline-2 outline-offset-2 outline-primary;
+    }
+
+    .answer:disabled {
+        @apply cursor-not-allowed pointer-events-none;
+    }
+
+    .answer-selected {
+        --_answer-bg: var(--token-color-selected);
+        --_answer-border: transparent;
+    }
+
+    .answer-correct {
+        --_answer-bg: var(--token-color-correct);
+        --_answer-border: transparent;
+    }
+
+    .answer-incorrect {
+        --_answer-bg: var(--token-color-incorrect);
+        --_answer-border: transparent;
+    }
+
+    .answer-disabled {
+        @apply opacity-60;
+    }
+}

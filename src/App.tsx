@@ -32,7 +32,7 @@ function App() {
       {error && (
         <div role="alert">
           <p className="error-message">❌ {error}</p>
-          <button className="retry-btn" onClick={refetch}>
+          <button className="btn btn-secondary" onClick={refetch}>
             🔄 Try again
           </button>
         </div>
@@ -40,11 +40,22 @@ function App() {
       {questions.length > 0 && (
         <main>
           {questions.map((q) => (
-            <div key={q.id}>{q.question}</div>
+            <div className="question-block" key={q.id}>
+              <div className="question-block__title">{q.question}</div>
+              <ul className="flex flex-wrap gap-2">
+                {q.options.map((answer) => (
+                  <li className="answer">{answer}</li>
+                ))}
+              </ul>
+            </div>
           ))}
         </main>
       )}
-      {hasCachedQuiz && <button onClick={handleNewQuiz}>New quiz</button>}
+      {hasCachedQuiz && (
+        <button className="btn btn-sm" onClick={handleNewQuiz}>
+          New quiz
+        </button>
+      )}
     </>
   );
 }
