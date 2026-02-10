@@ -7,11 +7,15 @@
         --_btn-radius: var(--token-radius-lg);
 
         @apply inline-flex items-center justify-center;
-        @apply text-base font-semibold;
+        @apply text-sm lg:text-base font-semibold;
         @apply cursor-pointer select-none;
         @apply transition-all duration-150;
 
-        padding: var(--token-spacing-lg) var(--token-spacing-2xl);
+        padding: var(--token-spacing-md) var(--token-spacing-xl);
+
+        @media (width >= 1024px) {
+            padding: var(--token-spacing-lg) var(--token-spacing-2xl);
+        }
         background-color: var(--_btn-bg);
         color: var(--_btn-fg);
         border: none;

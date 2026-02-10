@@ -1,72 +1,106 @@
 @layer base {
     :root {
-        /* -------- Couleurs -------- */
+        /* ======== COULEURS ======== */
 
-        /* Base */
+        /* --- Base --- */
         --token-color-background: oklch(97.6% 0.006 264.5);
         --token-color-surface: oklch(100% 0 0);
 
-        /* Primary */
+        /* --- Primary --- */
         --token-color-primary: oklch(49.2% 0.108 272.9);
         --token-color-primary-light: oklch(54.1% 0.09 285.3);
         --token-color-primary-dark: oklch(33.7% 0.088 273.1);
 
-        /* States */
-        --token-color-selected: oklch(89.6% 0.036 277);
-        --token-color-correct: oklch(82% 0.101 150.3);
-        --token-color-incorrect: oklch(85% 0.069 18.6);
+        /* --- Text --- */
+        --token-color-text-heading: oklch(33.7% 0.088 273.1);
+        --token-color-text-body: oklch(49.2% 0.05 275);
+        --token-color-text-on-primary: oklch(100% 0 0);
+        --token-color-text-muted: oklch(65% 0.03 275);
 
-        /* Decoration */
+        /* --- States --- */
+        --token-color-selected-bg: oklch(49.2% 0.108 272.9);
+        --token-color-selected-text: oklch(100% 0 0);
+        --token-color-correct: oklch(72% 0.14 150);
+        --token-color-correct-bg: oklch(92% 0.06 150);
+        --token-color-incorrect: oklch(62% 0.18 22);
+        --token-color-incorrect-bg: oklch(92% 0.04 18);
+        --token-color-faded-border: oklch(92% 0.01 270);
+        --token-color-faded-text: oklch(78% 0.01 270);
+
+        /* --- Decoration --- */
         --token-color-blob-yellow: oklch(97.9% 0.053 101.6);
         --token-color-blob-blue: oklch(93.4% 0.023 248.1);
 
-        /* Borders */
-        --token-color-border: oklch(90.4% 0.025 278.3);
-        --token-color-divider: oklch(90.4% 0.025 278.3);
+        /* --- Borders --- */
+        --token-color-border: oklch(86% 0.025 278);
+        --token-color-divider: oklch(92% 0.01 270);
 
-        /* -------- Typo -------- */
+        /* ======== TYPOGRAPHIE ======== */
 
-        --token-font-family: "Karla", "Inter", sans-serif;
+        --token-font-family: "Karla", sans-serif;
 
-        --token-font-size-xs: 0.75rem;
-        --token-font-size-sm: 0.875rem;
-        --token-font-size-base: 1rem;
-        --token-font-size-lg: 1.125rem;
-        --token-font-size-xl: 1.5rem;
-        --token-font-size-2xl: 2rem;
+        /* --- Tailles --- */
+        --token-font-size-xs: 0.75rem; /* 12px – labels, captions */
+        --token-font-size-sm: 0.875rem; /* 14px – chips */
+        --token-font-size-base: 1rem; /* 16px – body, boutons */
+        --token-font-size-lg: 1.125rem; /* 18px – questions */
+        --token-font-size-xl: 1.5rem; /* 24px – sous-titres */
+        --token-font-size-2xl: 2.5rem; /* 40px – titre app */
 
+        /* --- Graisses --- */
         --token-font-weight-regular: 400;
         --token-font-weight-medium: 500;
         --token-font-weight-semibold: 600;
         --token-font-weight-bold: 700;
+        --token-font-weight-extrabold: 800;
 
+        /* --- Hauteurs de ligne --- */
         --token-line-height-tight: 1.2;
         --token-line-height-normal: 1.5;
         --token-line-height-relaxed: 1.75;
 
-        /* -------- Spacing -------- */
+        /* ======== ESPACEMENT ======== */
 
-        --token-spacing-xs: 0.25rem;
-        --token-spacing-sm: 0.5rem;
-        --token-spacing-md: 1rem;
-        --token-spacing-lg: 1.5rem;
-        --token-spacing-xl: 2rem;
-        --token-spacing-2xl: 3rem;
-        --token-spacing-3xl: 4rem;
+        --token-spacing-xs: 0.25rem; /* 4px */
+        --token-spacing-sm: 0.5rem; /* 8px */
+        --token-spacing-md: 1rem; /* 16px */
+        --token-spacing-lg: 1.5rem; /* 24px */
+        --token-spacing-xl: 2rem; /* 32px */
+        --token-spacing-2xl: 3rem; /* 48px */
+        --token-spacing-3xl: 4rem; /* 64px */
 
-        /* -------- Borders -------- */
+        /* ======== BORDURES ======== */
 
         --token-border-width-thin: 1px;
         --token-border-width-medium: 2px;
 
-        --token-radius-sm: 0.5rem;
-        --token-radius-md: 0.625rem;
-        --token-radius-lg: 0.9375rem;
-        --token-radius-full: 9999px;
+        --token-radius-sm: 0.5rem; /* 8px – chips */
+        --token-radius-md: 0.75rem; /* 12px – cartes */
+        --token-radius-lg: 1.125rem; /* 18px – boutons CTA */
+        --token-radius-full: 9999px; /* – blobs, pilules */
 
-        /* -------- Shadows -------- */
+        /* ======== OMBRES ======== */
 
-        --token-shadow-sm: 0 2px 4px oklch(49.2% 0.108 272.9 / 0.1);
-        --token-shadow-md: 0 4px 12px oklch(49.2% 0.108 272.9 / 0.15);
+        --token-shadow-sm: 0 1px 4px oklch(49.2% 0.108 272.9 / 0.06);
+        --token-shadow-md: 0 2px 8px oklch(49.2% 0.108 272.9 / 0.18);
+
+        /* ======== TRANSITIONS ======== */
+
+        --token-transition-fast: 150ms ease;
+        --token-transition-normal: 250ms ease;
+    }
+
+    body {
+        font-family: var(--token-font-family);
+        color: var(--token-color-text-body);
+        line-height: var(--token-line-height-normal);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        color: var(--token-color-text-heading);
+        line-height: var(--token-line-height-tight);
     }
 }

@@ -5,6 +5,7 @@
 @import "./styles/base/index.css";
 
 /* Custom components */
+@import "./styles/components/main.css";
 @import "./styles/components/answer.css";
 @import "./styles/components/button.css";
 
@@ -22,6 +23,10 @@
     --color-blob-blue: var(--token-color-blob-blue);
     --color-border: var(--token-color-border);
     --color-divider: var(--token-color-divider);
+    --color-text-heading: var(--token-color-text-heading);
+    --color-text-body: var(--token-color-text-body);
+    --color-text-on-primary: var(--token-color-text-on-primary);
+    --color-text-muted: var(--token-color-text-muted);
 
     /* Typo */
     --font-sans: var(--token-font-family);

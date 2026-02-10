@@ -1,0 +1,45 @@
+@layer components {
+    .background {
+        @apply relative overflow-hidden bg-background min-h-dvh flex justify-center items-center;
+    }
+
+    .background::after {
+        content: "";
+        background-image: url("/lemon-blob.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 75%;
+        transform: translate(50%, -20%);
+    }
+
+    .background::before {
+        content: "";
+        background-image: url("/blue-blob.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        height: 75%;
+        transform: translate(-50%, 80%);
+    }
+
+    @media (min-width: 425px) {
+        .background::after {
+            width: 50%;
+            height: 50%;
+            transform: translate(65%, -50%);
+        }
+
+        .background::before {
+            width: 50%;
+            height: 50%;
+            transform: translate(-50%, 50%);
+        }
+    }
+}
