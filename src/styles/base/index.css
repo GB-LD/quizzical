@@ -22,8 +22,10 @@
         --token-color-selected-text: oklch(100% 0 0);
         --token-color-correct: oklch(72% 0.14 150);
         --token-color-correct-bg: oklch(92% 0.06 150);
+        --token-color-correct-text: oklch(45% 0.18 150);
         --token-color-incorrect: oklch(62% 0.18 22);
         --token-color-incorrect-bg: oklch(92% 0.04 18);
+        --token-color-incorrect-text: oklch(48% 0.2 22);
         --token-color-faded-border: oklch(92% 0.01 270);
         --token-color-faded-text: oklch(78% 0.01 270);
 

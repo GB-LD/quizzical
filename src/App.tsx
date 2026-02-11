@@ -22,7 +22,7 @@ function App() {
   }
 
   return (
-    <main className="background flex justify-center items-center">
+    <main className="background flex justify-center items-center py-12 lg:py-24">
       {currentScreen === "quiz_home" && (
         <Home
           hasCachedQuiz={hasCachedQuiz}

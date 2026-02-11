@@ -13,14 +13,19 @@ export default function Home({
   loadRandomQuiz,
 }: HomeProps) {
   return (
-    <section className="flex justify-center flex-col items-center">
+    <section className="flex justify-center flex-col items-center gap-8">
       <h1 className="text-2xl font-bold mb-8">Quizzical</h1>
       {hasCachedQuiz && (
-        <Button handleBtnClick={() => handleChangeView("quiz_questions")}>
+        <Button
+          className="w-full"
+          handleBtnClick={() => handleChangeView("quiz_questions")}
+        >
           Continue Quiz
         </Button>
       )}
-      <Button handleBtnClick={loadRandomQuiz}>New Random Quiz</Button>
+      <Button className="w-full" handleBtnClick={loadRandomQuiz}>
+        New Random Quiz
+      </Button>
     </section>
   );
 }

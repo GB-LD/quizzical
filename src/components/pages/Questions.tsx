@@ -20,9 +20,21 @@ export default function Questions({
       {error && <p className="mb-2xl">{error}</p>}
       {isLoading && <span className="loading loading-xl mb-2xl"></span>}
       {questionsList.length >= 1 && (
-        <ul className="w-full mb-2xl">
+        <ul className="w-4/5 mb-5">
           {questionsList.map((q) => (
-            <li key={q.id}>{q.question}</li>
+            <li
+              className="pb-3.5 not-last:mb-3.5 border-b border-divider"
+              key={q.id}
+            >
+              <p className="font-bold lg:text-lg text-primary-dark mb-3">
+                {q.question}
+              </p>
+              <ul className="flex flex-wrap gap-3">
+                {q.options.map((option) => (
+                  <li className="answer">{option}</li>
+                ))}
+              </ul>
+            </li>
           ))}
         </ul>
       )}
