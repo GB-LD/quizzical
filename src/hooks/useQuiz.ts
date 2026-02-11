@@ -1,7 +1,9 @@
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import { quizService } from "../services/quiz";
 import { quizStorage, quizConfigStorage } from "../services/storage";
+import { quizReducer, type QuizState } from "../state/quiz";
 import type { QuizQuestion, QuizConfig } from "../services/quiz";
+import type { Screen } from "../components/pages/types";
 import {
   isApiError,
   isNetworkError,
@@ -14,11 +16,12 @@ interface UseQuizReturn {
   isLoading: boolean;
   error: string | null;
   hasCachedQuiz: boolean;
-
+  currentScreen: Screen;
   loadQuiz: (config?: QuizConfig) => Promise<void>;
   refetch: () => Promise<void>;
   clearError: () => void;
   clearCache: () => void;
+  changeScreen: (screen: Screen) => void;
 }
 
 const DEFAULT_CONFIG: QuizConfig = {
@@ -26,84 +29,90 @@ const DEFAULT_CONFIG: QuizConfig = {
   category: 11,
 };
 
+function getInitialState(): QuizState {
+  return {
+    status: "idle",
+    questions: quizStorage.get() || [],
+    error: null,
+    hasCachedQuiz: !!quizStorage.get(),
+    lastConfig: quizConfigStorage.get() || DEFAULT_CONFIG,
+    currentScreen: "quiz_home",
+  };
+}
+
 export function useQuiz(): UseQuizReturn {
-  const [questions, setQuestions] = useState<QuizQuestion[]>(() => {
-    const cached = quizStorage.get();
-    return cached || [];
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasCachedQuiz, setHasCachedQuiz] = useState<boolean>(
-    () => !!quizStorage.get(),
+  const [state, dispatch] = useReducer(quizReducer, undefined, getInitialState);
+  const isLoadingRef = useRef(false);
+
+  const loadQuiz = useCallback(
+    async (config: QuizConfig = DEFAULT_CONFIG) => {
+      // Synchronous check to prevent concurrent requests
+      if (isLoadingRef.current) return;
+
+      const cached = quizStorage.get();
+      const cachedConfig = quizConfigStorage.get();
+      const isSameConfig = cachedConfig
+        ? checkIsSameConfig(cachedConfig, config)
+        : false;
+
+      if (cached && isSameConfig) {
+        dispatch({ type: "LOAD_SUCCESS", questions: cached });
+        return;
+      }
+
+      isLoadingRef.current = true;
+      dispatch({ type: "LOAD_START", config });
+      quizConfigStorage.save(config);
+
+      try {
+        const data = await quizService.getQuiz(config);
+        quizStorage.save(data);
+        dispatch({ type: "LOAD_SUCCESS", questions: data });
+      } catch (err) {
+        dispatch({
+          type: "LOAD_ERROR",
+          message: getUserFriendlyErrorMessage(err),
+        });
+        console.error("Quiz loading failed:", err);
+      } finally {
+        isLoadingRef.current = false;
+      }
+    },
+    [],
   );
-  const lastConfig = useRef<QuizConfig>(
-    quizConfigStorage.get() || DEFAULT_CONFIG,
-  );
-  const isRequestInFlight = useRef<boolean>(false);
-
-  const loadQuiz = useCallback(async (config: QuizConfig = DEFAULT_CONFIG) => {
-    if (isRequestInFlight.current) return;
-
-    const cached = quizStorage.get();
-    const cachedConfig = quizConfigStorage.get();
-    const isSameConfig = cachedConfig
-      ? checkIsSameConfig(cachedConfig, config)
-      : false;
-
-    if (cached && isSameConfig) {
-      setQuestions(cached);
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-    lastConfig.current = config;
-    quizConfigStorage.save(config);
-
-    try {
-      isRequestInFlight.current = true;
-      const data = await quizService.getQuiz(config);
-      setQuestions(data);
-      quizStorage.save(data);
-      setHasCachedQuiz(true);
-    } catch (err) {
-      const errorMessage = getUserFriendlyErrorMessage(err);
-      setError(errorMessage);
-      setQuestions([]);
-      console.error("X Quiz loading failed:", err);
-    } finally {
-      isRequestInFlight.current = false;
-      setIsLoading(false);
-    }
-  }, []);
 
   const refetch = useCallback(async () => {
     quizStorage.remove();
     quizConfigStorage.remove();
-    setHasCachedQuiz(false);
-    await loadQuiz(lastConfig.current);
-  }, [loadQuiz]);
+    dispatch({ type: "CLEAR_CACHE" });
+    await loadQuiz(state.lastConfig);
+  }, [loadQuiz, state.lastConfig]);
 
   const clearError = useCallback(() => {
-    setError(null);
+    dispatch({ type: "CLEAR_ERROR" });
   }, []);
 
   const clearCache = useCallback(() => {
     quizStorage.remove();
     quizConfigStorage.remove();
-    setQuestions([]);
-    setHasCachedQuiz(false);
+    dispatch({ type: "CLEAR_CACHE" });
+  }, []);
+
+  const changeScreen = useCallback((screen: Screen) => {
+    dispatch({ type: "CHANGE_SCREEN", screen });
   }, []);
 
   return {
-    questions,
-    isLoading,
-    error,
-    hasCachedQuiz,
+    questions: state.questions,
+    isLoading: state.status === "loading",
+    error: state.error,
+    hasCachedQuiz: state.hasCachedQuiz,
+    currentScreen: state.currentScreen,
     loadQuiz,
     refetch,
     clearError,
     clearCache,
+    changeScreen,
   };
 }
 

@@ -1,29 +1,31 @@
-import { useState } from "react";
 import { useQuiz } from "./hooks/useQuiz";
 import Home from "./components/pages/Home";
 import Answers from "./components/pages/Answers";
 import Questions from "./components/pages/Questions";
 import Config from "./components/pages/Config";
-import type { Screen } from "./components/pages/types";
 
 function App() {
-  const { loadQuiz, hasCachedQuiz, questions, clearCache, error, isLoading } =
-    useQuiz();
-  const [currentScreen, setCurrentScreen] = useState<Screen>("quiz_home");
+  const {
+    loadQuiz,
+    hasCachedQuiz,
+    questions,
+    currentScreen,
+    clearCache,
+    error,
+    isLoading,
+    changeScreen,
+  } = useQuiz();
 
   async function loadRandomQuiz() {
     clearCache();
-    setCurrentScreen("quiz_questions");
+    changeScreen("quiz_questions");
     await loadQuiz({ amount: 10, category: 11 });
   }
 
   return (
     <main className="background flex justify-center items-center">
       {currentScreen === "quiz_home" && (
-        <Home
-          hasCachedQuiz={hasCachedQuiz}
-          handleChangeView={setCurrentScreen}
-        />
+        <Home hasCachedQuiz={hasCachedQuiz} handleChangeView={changeScreen} />
       )}
 
       {currentScreen === "quiz_config" && (
@@ -33,7 +35,7 @@ function App() {
       {currentScreen === "quiz_questions" && (
         <Questions
           questionsList={questions}
-          handleChangeView={setCurrentScreen}
+          handleChangeView={changeScreen}
           error={error}
           isLoading={isLoading}
         />
