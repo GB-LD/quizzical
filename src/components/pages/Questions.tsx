@@ -26,12 +26,14 @@ export default function Questions({
           ))}
         </ul>
       )}
-      <Button
-        className="btn-secondary btn-sm block mx-auto"
-        handleBtnClick={() => handleChangeView("quiz_config")}
-      >
-        Back
-      </Button>
+      {!isLoading && (
+        <Button
+          className="btn-secondary btn-sm block mx-auto"
+          handleBtnClick={() => handleChangeView("quiz_home")}
+        >
+          Back
+        </Button>
+      )}
     </section>
   );
 }

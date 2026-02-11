@@ -2,7 +2,6 @@ import { useQuiz } from "./hooks/useQuiz";
 import Home from "./components/pages/Home";
 import Answers from "./components/pages/Answers";
 import Questions from "./components/pages/Questions";
-import Config from "./components/pages/Config";
 
 function App() {
   const {
@@ -25,11 +24,11 @@ function App() {
   return (
     <main className="background flex justify-center items-center">
       {currentScreen === "quiz_home" && (
-        <Home hasCachedQuiz={hasCachedQuiz} handleChangeView={changeScreen} />
-      )}
-
-      {currentScreen === "quiz_config" && (
-        <Config loadRandomQuiz={loadRandomQuiz} />
+        <Home
+          hasCachedQuiz={hasCachedQuiz}
+          handleChangeView={changeScreen}
+          loadRandomQuiz={loadRandomQuiz}
+        />
       )}
 
       {currentScreen === "quiz_questions" && (

@@ -15,6 +15,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
         status: "success",
         questions: action.questions,
         hasCachedQuiz: true,
+        error: null,
       };
     case "LOAD_ERROR":
       return {
@@ -35,6 +36,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
         questions: [],
         hasCachedQuiz: false,
         status: "idle",
+        error: null,
       };
     case "CHANGE_SCREEN":
       return {

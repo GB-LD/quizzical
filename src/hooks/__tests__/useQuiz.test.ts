@@ -636,4 +636,108 @@ describe("useQuiz", () => {
       });
     });
   });
+
+  describe("Screen navigation", () => {
+    it("should have quiz_home as initial screen", () => {
+      // Given & When
+      const { result } = renderHook(() => useQuiz());
+
+      // Then
+      expect(result.current.currentScreen).toBe("quiz_home");
+    });
+
+    it("should change screen when changeScreen is called", () => {
+      // Given
+      const { result } = renderHook(() => useQuiz());
+
+      // When
+      act(() => {
+        result.current.changeScreen("quiz_config");
+      });
+
+      // Then
+      expect(result.current.currentScreen).toBe("quiz_config");
+    });
+
+    it("should preserve other state when changing screen", async () => {
+      // Given
+      (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      expect(result.current.questions).toHaveLength(2);
+
+      // When
+      act(() => {
+        result.current.changeScreen("quiz_answers");
+      });
+
+      // Then
+      expect(result.current.currentScreen).toBe("quiz_answers");
+      expect(result.current.questions).toHaveLength(2);
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toBeNull();
+    });
+
+    it("should handle all valid screen types", () => {
+      // Given
+      const { result } = renderHook(() => useQuiz());
+      const screens: Array<typeof result.current.currentScreen> = [
+        "quiz_home",
+        "quiz_config",
+        "quiz_questions",
+        "quiz_answers",
+      ];
+
+      // When & Then
+      screens.forEach((screen) => {
+        act(() => {
+          result.current.changeScreen(screen);
+        });
+        expect(result.current.currentScreen).toBe(screen);
+      });
+    });
+
+    it("should allow changing screen multiple times", () => {
+      // Given
+      const { result } = renderHook(() => useQuiz());
+
+      // When & Then
+      act(() => {
+        result.current.changeScreen("quiz_config");
+      });
+      expect(result.current.currentScreen).toBe("quiz_config");
+
+      act(() => {
+        result.current.changeScreen("quiz_questions");
+      });
+      expect(result.current.currentScreen).toBe("quiz_questions");
+
+      act(() => {
+        result.current.changeScreen("quiz_home");
+      });
+      expect(result.current.currentScreen).toBe("quiz_home");
+    });
+
+    it("should preserve currentScreen when other operations occur", async () => {
+      // Given
+      (quizService.getQuiz as Mock).mockResolvedValueOnce(mockQuestions);
+      const { result } = renderHook(() => useQuiz());
+
+      act(() => {
+        result.current.changeScreen("quiz_questions");
+      });
+
+      // When - Load quiz
+      await act(async () => {
+        await result.current.loadQuiz();
+      });
+
+      // Then - Screen should not change
+      expect(result.current.currentScreen).toBe("quiz_questions");
+    });
+  });
 });
