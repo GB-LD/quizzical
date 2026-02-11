@@ -8,6 +8,7 @@
 @import "./styles/components/main.css";
 @import "./styles/components/answer.css";
 @import "./styles/components/button.css";
+@import "./styles/components/loading.css";
 
 @theme {
     /* Colors */
