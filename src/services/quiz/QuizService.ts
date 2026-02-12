@@ -2,7 +2,12 @@ import { httpClient } from "../api/client";
 import { ENDPOINTS } from "../api/endpoints";
 import type { ApiQuestion, ApiQuizResponse } from "../api/types";
 import { ApiResponseCode } from "../api/constants";
-import type { QuizQuestion, QuizConfig, QuizCategory } from "./types";
+import type {
+  QuizQuestion,
+  QuizAnswer,
+  QuizConfig,
+  QuizCategory,
+} from "./types";
 import { ValidationError } from "../../utils/errors";
 
 export class QuizService {
@@ -31,8 +36,7 @@ export class QuizService {
   private validateResponse(data: ApiQuizResponse): void {
     if (data.response_code !== ApiResponseCode.SUCCESS) {
       const errorMessages: Record<number, string> = {
-        [ApiResponseCode.NO_RESULTS]:
-          "No questions found with these criteria",
+        [ApiResponseCode.NO_RESULTS]: "No questions found with these criteria",
         [ApiResponseCode.INVALID_PARAMETER]: "Invalid parameters",
         [ApiResponseCode.TOKEN_NOT_FOUND]: "Session expired",
         [ApiResponseCode.TOKEN_EMPTY]: "No more questions available",
@@ -56,6 +60,7 @@ export class QuizService {
     txt.innerHTML = html;
     return txt.value;
   }
+
   private shuffleArray<T>(array: T[]): T[] {
     const shuffled = [...array];
 
@@ -67,12 +72,25 @@ export class QuizService {
     return shuffled;
   }
 
+  private transformAnswer(
+    answer: string,
+    isCorrectAnswer: boolean,
+  ): QuizAnswer {
+    const decodeAnswer = this.decodeHtml(answer);
+
+    return {
+      id: crypto.randomUUID(),
+      text: decodeAnswer,
+      isCorrectAnswer: isCorrectAnswer,
+    };
+  }
+
   private transformQuestion(raw: ApiQuestion): QuizQuestion {
     const category = this.decodeHtml(raw.category);
     const question = this.decodeHtml(raw.question);
-    const correctAnswer = this.decodeHtml(raw.correct_answer);
+    const correctAnswer = this.transformAnswer(raw.correct_answer, true);
     const incorrectAnswers = raw.incorrect_answers.map((a) =>
-      this.decodeHtml(a),
+      this.transformAnswer(a, false),
     );
 
     const allOptions = [correctAnswer, ...incorrectAnswers];

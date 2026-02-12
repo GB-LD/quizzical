@@ -27,7 +27,11 @@ const mockApiResponse: ApiQuizResponse = {
 
 describe("Quiz Integration - Full Stack", () => {
   // Mock déterministe des UUIDs
-  const mockUUIDs = ["quiz-1", "quiz-2", "quiz-3"];
+  // Need enough UUIDs for: 4 answers per question + 1 question ID = 5 UUIDs per question
+  const mockUUIDs = [
+    "answer-1-correct", "answer-1-a", "answer-1-b", "answer-1-c", "question-1",
+    "answer-2-correct", "answer-2-a", "answer-2-b", "answer-2-c", "question-2"
+  ];
   let uuidIndex = 0;
 
   // Mock sessionStorage avec inspection
@@ -112,8 +116,8 @@ describe("Quiz Integration - Full Stack", () => {
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
 
-      expect(result.current.questions[0].id).toBe("quiz-1");
-      expect(result.current.questions[1].id).toBe("quiz-2");
+      expect(result.current.questions[0].id).toBe("question-1");
+      expect(result.current.questions[1].id).toBe("question-2");
 
       const cached = mockSessionStorage.getItem(STORAGE_KEYS.QUIZ_QUESTIONS);
       const parsed = JSON.parse(cached!);

@@ -53,13 +53,16 @@ describe("QuizService", () => {
         type: "multiple",
         difficulty: "medium",
         question: "What year was the movie released?",
-        correctAnswer: "1999",
       });
+      expect(questions[0].correctAnswer.text).toBe("1999");
+      expect(questions[0].correctAnswer.isCorrectAnswer).toBe(true);
       expect(questions[0].options).toHaveLength(4);
-      expect(questions[0].options).toContain("1999");
-      expect(questions[0].options).toContain("2000");
-      expect(questions[0].options).toContain("1998");
-      expect(questions[0].options).toContain("2001");
+
+      const optionTexts = questions[0].options.map(opt => opt.text);
+      expect(optionTexts).toContain("1999");
+      expect(optionTexts).toContain("2000");
+      expect(optionTexts).toContain("1998");
+      expect(optionTexts).toContain("2001");
       expect(questions[0].id).toBeDefined();
     });
 
@@ -105,9 +108,11 @@ describe("QuizService", () => {
 
       const questions = await quizService.getQuiz(mockConfig);
 
-      expect(questions[0].correctAnswer).toBe("Rock & Roll");
-      expect(questions[0].options).toContain("Rock & Roll");
-      expect(questions[0].options).toContain("Pop & Jazz");
+      expect(questions[0].correctAnswer.text).toBe("Rock & Roll");
+
+      const optionTexts = questions[0].options.map(opt => opt.text);
+      expect(optionTexts).toContain("Rock & Roll");
+      expect(optionTexts).toContain("Pop & Jazz");
     });
 
     it("generates unique IDs for each question", async () => {
@@ -163,10 +168,12 @@ describe("QuizService", () => {
         (httpClient.get as Mock).mockResolvedValueOnce(mockApiResponse);
         const questions = await quizService.getQuiz(mockConfig);
 
+        const optionTexts = questions[0].options.map(opt => opt.text);
+
         // Check if order is different from original
         if (
-          questions[0].options.some(
-            (opt, idx) => opt !== originalOrder[idx]
+          optionTexts.some(
+            (text, idx) => text !== originalOrder[idx]
           )
         ) {
           hasShuffled = true;

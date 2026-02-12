@@ -4,8 +4,14 @@ export interface QuizQuestion {
   type: "multiple" | "boolean";
   difficulty: "easy" | "medium" | "hard";
   question: string;
-  correctAnswer: string;
-  options: string[];
+  correctAnswer: QuizAnswer;
+  options: QuizAnswer[];
+}
+
+export interface QuizAnswer {
+  id: string;
+  text: string;
+  isCorrectAnswer: boolean;
 }
 
 export interface QuizConfig {

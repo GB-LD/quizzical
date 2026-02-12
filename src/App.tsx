@@ -1,7 +1,7 @@
 import { useQuiz } from "./hooks/useQuiz";
-import Home from "./components/pages/Home";
-import Answers from "./components/pages/Answers";
-import Questions from "./components/pages/Questions";
+import HomeScreen from "./components/pages/HomeScreen";
+import AnswersScreen from "./components/pages/AnswersScreen";
+import QuestionsScreen from "./components/pages/QuestionsScreen";
 
 function App() {
   const {
@@ -24,7 +24,7 @@ function App() {
   return (
     <main className="background flex justify-center items-center py-12 lg:py-24">
       {currentScreen === "quiz_home" && (
-        <Home
+        <HomeScreen
           hasCachedQuiz={hasCachedQuiz}
           handleChangeView={changeScreen}
           loadRandomQuiz={loadRandomQuiz}
@@ -32,7 +32,7 @@ function App() {
       )}
 
       {currentScreen === "quiz_questions" && (
-        <Questions
+        <QuestionsScreen
           questionsList={questions}
           handleChangeView={changeScreen}
           error={error}
@@ -40,7 +40,7 @@ function App() {
         />
       )}
 
-      {currentScreen === "quiz_answers" && <Answers />}
+      {currentScreen === "quiz_answers" && <AnswersScreen />}
     </main>
   );
 }

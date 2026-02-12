@@ -1,17 +1,17 @@
 import Button from "../Button";
 import type { Screen } from "./types";
 
-interface HomeProps {
+interface HomeScreenProps {
   hasCachedQuiz: boolean;
   handleChangeView: (view: Screen) => void;
   loadRandomQuiz: () => void;
 }
 
-export default function Home({
+export default function HomeScreen({
   hasCachedQuiz,
   handleChangeView,
   loadRandomQuiz,
-}: HomeProps) {
+}: HomeScreenProps) {
   return (
     <section className="flex justify-center flex-col items-center gap-8">
       <h1 className="text-2xl font-bold mb-8">Quizzical</h1>
