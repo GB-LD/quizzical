@@ -11,7 +11,7 @@ export default function QuestionWrapper({ question }: QuestionWrapperProps) {
       <p className="font-bold lg:text-lg text-primary-dark mb-3">
         {question.question}
       </p>
-      <AnswersList answersList={question.options} />
+      <AnswersList questionId={question.id} answersList={question.options} />
     </>
   );
 }
