@@ -34,6 +34,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
       return {
         ...state,
         questions: [],
+        userAnswers: {},
         hasCachedQuiz: false,
         status: "idle",
         error: null,
@@ -42,6 +43,14 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
       return {
         ...state,
         currentScreen: action.screen,
+      };
+    case "SELECT_ANSWER":
+      return {
+        ...state,
+        userAnswers: {
+          ...state.userAnswers,
+          [action.questionId]: action.answerId,
+        },
       };
     default:
       return state;

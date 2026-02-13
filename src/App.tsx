@@ -2,13 +2,16 @@ import { useQuiz } from "./hooks/useQuiz";
 import HomeScreen from "./components/pages/HomeScreen";
 import AnswersScreen from "./components/pages/AnswersScreen";
 import QuestionsScreen from "./components/pages/QuestionsScreen";
+import { QuizAnswersProvider } from "./context/answers/QuizAnswersProvider";
 
 function App() {
   const {
     loadQuiz,
     hasCachedQuiz,
     questions,
+    userAnswers,
     currentScreen,
+    selectAnswers,
     clearCache,
     error,
     isLoading,
@@ -31,16 +34,20 @@ function App() {
         />
       )}
 
-      {currentScreen === "quiz_questions" && (
-        <QuestionsScreen
-          questionsList={questions}
-          handleChangeView={changeScreen}
-          error={error}
-          isLoading={isLoading}
-        />
-      )}
+      <QuizAnswersProvider
+        value={{ userAnswers: userAnswers, selectAnswers: selectAnswers }}
+      >
+        {currentScreen === "quiz_questions" && (
+          <QuestionsScreen
+            questionsList={questions}
+            handleChangeView={changeScreen}
+            error={error}
+            isLoading={isLoading}
+          />
+        )}
 
-      {currentScreen === "quiz_answers" && <AnswersScreen />}
+        {currentScreen === "quiz_answers" && <AnswersScreen />}
+      </QuizAnswersProvider>
     </main>
   );
 }

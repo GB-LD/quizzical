@@ -21,15 +21,6 @@ export interface QuizConfig {
   type?: "multiple" | "boolean";
 }
 
-export interface QuizState {
-  questions: QuizQuestion[];
-  currentIndex: number;
-  score: number;
-  userAnswers: Record<string, string>;
-  isLoading: boolean;
-  error: string | null;
-}
-
 export interface QuizCategory {
   id: number;
   name: string;
