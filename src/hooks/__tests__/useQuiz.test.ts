@@ -28,6 +28,12 @@ vi.mock("../../services/storage", () => ({
     remove: vi.fn(),
     hasData: vi.fn(),
   },
+  quizUserAnswersStorage: {
+    get: vi.fn(),
+    save: vi.fn(),
+    remove: vi.fn(),
+    hasData: vi.fn(),
+  },
 }));
 
 import { quizService } from "../../services/quiz";

@@ -84,3 +84,7 @@ export const quizStorage = new StorageService<QuizQuestion[]>(
 export const quizConfigStorage = new StorageService<QuizConfig>(
   STORAGE_KEYS.QUIZ_CONFIG,
 );
+
+export const quizUserAnswersStorage = new StorageService<Record<string, string>>(
+  STORAGE_KEYS.QUIZ_USER_ANSWERS,
+);

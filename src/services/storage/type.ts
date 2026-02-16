@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   QUIZ_QUESTIONS: "quizzical_question",
   QUIZ_CONFIG: "quizzical_config",
   QUIZ_ANSWERS: "quizzical_answers",
+  QUIZ_USER_ANSWERS: "quizzical_user_answers",
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

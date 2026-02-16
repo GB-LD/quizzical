@@ -6,7 +6,7 @@ export type QuizStatus = "idle" | "loading" | "error" | "success";
 export interface QuizState {
   status: QuizStatus;
   questions: QuizQuestion[];
-  userAnswers: Record<string, string>;
+  userAnswers: Record<string, string> | null;
   error: string | null;
   hasCachedQuiz: boolean;
   lastConfig: QuizConfig;
@@ -15,7 +15,11 @@ export interface QuizState {
 
 export type QuizAction =
   | { type: "LOAD_START"; config: QuizConfig }
-  | { type: "LOAD_SUCCESS"; questions: QuizQuestion[] }
+  | {
+      type: "LOAD_SUCCESS";
+      questions: QuizQuestion[];
+      userAnswers: Record<string, string> | null;
+    }
   | { type: "LOAD_ERROR"; message: string }
   | { type: "CLEAR_ERROR" }
   | { type: "CLEAR_CACHE" }

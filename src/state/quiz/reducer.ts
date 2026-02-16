@@ -16,6 +16,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
         questions: action.questions,
         hasCachedQuiz: true,
         error: null,
+        userAnswers: action.userAnswers,
       };
     case "LOAD_ERROR":
       return {

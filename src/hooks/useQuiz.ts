@@ -1,6 +1,10 @@
 import { useCallback, useReducer, useRef } from "react";
 import { quizService } from "../services/quiz";
-import { quizStorage, quizConfigStorage } from "../services/storage";
+import {
+  quizStorage,
+  quizConfigStorage,
+  quizUserAnswersStorage,
+} from "../services/storage";
 import { quizReducer, type QuizState } from "../state/quiz";
 import type { QuizQuestion, QuizConfig } from "../services/quiz";
 import type { Screen } from "../components/pages/types";
@@ -14,7 +18,7 @@ import {
 interface UseQuizReturn {
   //states
   questions: QuizQuestion[];
-  userAnswers: Record<string, string>;
+  userAnswers: Record<string, string> | null;
   isLoading: boolean;
   error: string | null;
   hasCachedQuiz: boolean;
@@ -38,7 +42,7 @@ function getInitialState(): QuizState {
   return {
     status: "idle",
     questions: quizStorage.get() || [],
-    userAnswers: {},
+    userAnswers: quizUserAnswersStorage.get() || {},
     error: null,
     hasCachedQuiz: !!quizStorage.get(),
     lastConfig: quizConfigStorage.get() || DEFAULT_CONFIG,
@@ -59,9 +63,14 @@ export function useQuiz(): UseQuizReturn {
     const isSameConfig = cachedConfig
       ? checkIsSameConfig(cachedConfig, config)
       : false;
+    const cachedUserAnswers = quizUserAnswersStorage.get() || null;
 
     if (cached && isSameConfig) {
-      dispatch({ type: "LOAD_SUCCESS", questions: cached });
+      dispatch({
+        type: "LOAD_SUCCESS",
+        questions: cached,
+        userAnswers: cachedUserAnswers,
+      });
       return;
     }
 
@@ -72,7 +81,7 @@ export function useQuiz(): UseQuizReturn {
     try {
       const data = await quizService.getQuiz(config);
       quizStorage.save(data);
-      dispatch({ type: "LOAD_SUCCESS", questions: data });
+      dispatch({ type: "LOAD_SUCCESS", questions: data, userAnswers: null });
     } catch (err) {
       dispatch({
         type: "LOAD_ERROR",
@@ -98,6 +107,7 @@ export function useQuiz(): UseQuizReturn {
   const clearCache = useCallback(() => {
     quizStorage.remove();
     quizConfigStorage.remove();
+    quizUserAnswersStorage.remove();
     dispatch({ type: "CLEAR_CACHE" });
   }, []);
 
@@ -106,6 +116,12 @@ export function useQuiz(): UseQuizReturn {
   }, []);
 
   const selectAnswers = useCallback((questionId: string, answerId: string) => {
+    const cachedAnswers = quizUserAnswersStorage.get() || {};
+    const updatedAnswers = {
+      ...cachedAnswers,
+      [questionId]: answerId,
+    };
+    quizUserAnswersStorage.save(updatedAnswers);
     dispatch({ type: "SELECT_ANSWER", questionId, answerId });
   }, []);
 

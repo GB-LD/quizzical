@@ -17,7 +17,7 @@ export default function Answer({
   const handleAnswerClick = (answerId: string) =>
     selectAnswers(questionId, answerId);
 
-  const isSelected = userAnswers[questionId] === answerId;
+  const isSelected = userAnswers && userAnswers[questionId] === answerId;
 
   return (
     <button
