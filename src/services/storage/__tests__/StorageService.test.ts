@@ -4,6 +4,7 @@ import {
   StorageService,
   quizStorage,
   quizConfigStorage,
+  quizUserAnswersStorage,
 } from "../StorageService";
 import type { StorageStrategy } from "../type";
 import type { QuizQuestion } from "../../quiz/types";
@@ -337,5 +338,20 @@ describe("Exported instances", () => {
 
     // Then
     expect(result).toEqual(mockConfig);
+  });
+
+  it("quizUserAnswersStorage should be configured with QUIZ_USER_ANSWERS key", () => {
+    // Given
+    const mockAnswers = { "question-1": "answer-a", "question-2": "answer-b" };
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValue(
+      JSON.stringify({ data: mockAnswers, savedAt: Date.now(), version: 1 })
+    );
+
+    // When
+    const result = quizUserAnswersStorage.get();
+
+    // Then
+    expect(result).toEqual(mockAnswers);
+    expect(Storage.prototype.getItem).toHaveBeenCalledWith("quizzical_user_answers");
   });
 });

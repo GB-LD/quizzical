@@ -37,7 +37,7 @@ vi.mock("../../services/storage", () => ({
 }));
 
 import { quizService } from "../../services/quiz";
-import { quizStorage, quizConfigStorage } from "../../services/storage";
+import { quizStorage, quizConfigStorage, quizUserAnswersStorage } from "../../services/storage";
 import { useQuiz } from "../useQuiz";
 
 describe("useQuiz", () => {
@@ -67,6 +67,7 @@ describe("useQuiz", () => {
     // Reset storage mocks to return null (no cached data)
     (quizStorage.get as Mock).mockReturnValue(null);
     (quizConfigStorage.get as Mock).mockReturnValue(null);
+    (quizUserAnswersStorage.get as Mock).mockReturnValue(null);
   });
 
   describe("Initial state", () => {
@@ -744,6 +745,168 @@ describe("useQuiz", () => {
 
       // Then - Screen should not change
       expect(result.current.currentScreen).toBe("quiz_questions");
+    });
+  });
+
+  describe("User answers persistence", () => {
+    it("should initialize with cached user answers if available", () => {
+      // Given
+      const cachedAnswers = { "1": "answer-a", "2": "answer-b" };
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue({ amount: 10, category: 11 });
+      (quizUserAnswersStorage.get as Mock).mockReturnValue(cachedAnswers);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      // Then
+      expect(result.current.userAnswers).toEqual(cachedAnswers);
+    });
+
+    it("should initialize with empty object when no cached answers exist", () => {
+      // Given
+      (quizUserAnswersStorage.get as Mock).mockReturnValue(null);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      // Then
+      expect(result.current.userAnswers).toEqual({});
+    });
+
+    it("should save user answer to storage when selectAnswers is called", () => {
+      // Given
+      (quizUserAnswersStorage.get as Mock).mockReturnValue({});
+      const { result } = renderHook(() => useQuiz());
+
+      // When
+      act(() => {
+        result.current.selectAnswers("question-1", "answer-a");
+      });
+
+      // Then
+      expect(quizUserAnswersStorage.save).toHaveBeenCalledWith({
+        "question-1": "answer-a",
+      });
+    });
+
+    it("should accumulate multiple answers in storage", () => {
+      // Given
+      (quizUserAnswersStorage.get as Mock).mockReturnValue({});
+      const { result } = renderHook(() => useQuiz());
+
+      // Mock get to return saved values after first save
+      (quizUserAnswersStorage.get as Mock).mockReturnValue({ "question-1": "answer-a" });
+
+      // When
+      act(() => {
+        result.current.selectAnswers("question-1", "answer-a");
+      });
+
+      act(() => {
+        result.current.selectAnswers("question-2", "answer-b");
+      });
+
+      // Then
+      expect(quizUserAnswersStorage.save).toHaveBeenCalledTimes(2);
+      expect(quizUserAnswersStorage.save).toHaveBeenNthCalledWith(1, {
+        "question-1": "answer-a",
+      });
+      expect(quizUserAnswersStorage.save).toHaveBeenNthCalledWith(2, {
+        "question-1": "answer-a",
+        "question-2": "answer-b",
+      });
+    });
+
+    it("should allow updating an existing answer", () => {
+      // Given
+      (quizUserAnswersStorage.get as Mock)
+        .mockReturnValueOnce({})
+        .mockReturnValueOnce({ "question-1": "answer-a" });
+      const { result } = renderHook(() => useQuiz());
+
+      act(() => {
+        result.current.selectAnswers("question-1", "answer-a");
+      });
+
+      // When - Change answer for same question
+      act(() => {
+        result.current.selectAnswers("question-1", "answer-b");
+      });
+
+      // Then
+      expect(quizUserAnswersStorage.save).toHaveBeenLastCalledWith({
+        "question-1": "answer-b",
+      });
+    });
+
+    it("should restore cached answers when loading quiz with same config", async () => {
+      // Given
+      const config = { amount: 10, category: 11 };
+      const cachedAnswers = { "1": "answer-a", "2": "answer-b" };
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue(config);
+      (quizUserAnswersStorage.get as Mock).mockReturnValue(cachedAnswers);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz(config);
+      });
+
+      // Then
+      expect(result.current.userAnswers).toEqual(cachedAnswers);
+    });
+
+    it("should reset userAnswers to null when loading quiz with different config", async () => {
+      // Given
+      const cachedConfig = { amount: 5, category: 9 };
+      const newConfig = { amount: 10, category: 11 };
+      (quizStorage.get as Mock).mockReturnValue(mockQuestions);
+      (quizConfigStorage.get as Mock).mockReturnValue(cachedConfig);
+      (quizUserAnswersStorage.get as Mock).mockReturnValue({ "1": "answer-a" });
+      (quizService.getQuiz as Mock).mockResolvedValue(mockQuestions);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      await act(async () => {
+        await result.current.loadQuiz(newConfig);
+      });
+
+      // Then
+      expect(result.current.userAnswers).toBeNull();
+    });
+
+    it("should clear user answers storage when clearCache is called", () => {
+      // Given
+      const { result } = renderHook(() => useQuiz());
+
+      // When
+      act(() => {
+        result.current.clearCache();
+      });
+
+      // Then
+      expect(quizUserAnswersStorage.remove).toHaveBeenCalled();
+    });
+
+    it("should handle null userAnswers gracefully", () => {
+      // Given
+      (quizUserAnswersStorage.get as Mock).mockReturnValue(null);
+
+      // When
+      const { result } = renderHook(() => useQuiz());
+
+      // Then
+      expect(result.current.userAnswers).toEqual({});
+      // Should not throw when selecting answers
+      expect(() => {
+        act(() => {
+          result.current.selectAnswers("question-1", "answer-a");
+        });
+      }).not.toThrow();
     });
   });
 });
