@@ -2,6 +2,7 @@ import type { QuizQuestion } from "../../services/quiz";
 import Button from "../Button";
 import QuestionWrapper from "../QuestionWrapper";
 import type { Screen } from "./types";
+import { useAnswersContext } from "../../context/answers/useAnswersContext";
 
 interface QuestionsScreenProps {
   questionsList: QuizQuestion[];
@@ -16,6 +17,11 @@ export default function QuestionsScreen({
   error,
   isLoading,
 }: QuestionsScreenProps) {
+  const { userAnswers } = useAnswersContext();
+
+  const quizIsCompleted =
+    userAnswers && Object.keys(userAnswers).length === questionsList.length;
+
   return (
     <section className="flex flex-col justify-center items-center">
       {error && <p className="mb-2xl">{error}</p>}
@@ -43,6 +49,14 @@ export default function QuestionsScreen({
           Back
         </Button>
       )}
+
+      <Button
+        className="btn-secondary btn-sm block mx-auto"
+        isDisabled={!quizIsCompleted}
+        handleBtnClick={() => handleChangeView("quiz_answers")}
+      >
+        Check answers
+      </Button>
     </section>
   );
 }

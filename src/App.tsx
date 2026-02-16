@@ -35,7 +35,7 @@ function App() {
       )}
 
       <QuizAnswersProvider
-        value={{ userAnswers: userAnswers, selectAnswers: selectAnswers }}
+        value={{ userAnswers: userAnswers, selectAnswers: selectAnswers, currentScreen: currentScreen }}
       >
         {currentScreen === "quiz_questions" && (
           <QuestionsScreen
@@ -46,7 +46,12 @@ function App() {
           />
         )}
 
-        {currentScreen === "quiz_answers" && <AnswersScreen />}
+        {currentScreen === "quiz_answers" && (
+          <AnswersScreen
+            questionsList={questions}
+            handleChangeView={changeScreen}
+          />
+        )}
       </QuizAnswersProvider>
     </main>
   );

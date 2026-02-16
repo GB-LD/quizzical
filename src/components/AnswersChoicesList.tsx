@@ -14,7 +14,11 @@ export default function AnswersChoicesList({
     <ul className="flex flex-wrap gap-3">
       {answersList.map((answer) => (
         <li key={answer.id}>
-          <Answer questionId={questionId} answerId={answer.id}>
+          <Answer
+            questionId={questionId}
+            answerId={answer.id}
+            isCorrectAnswer={answer.isCorrectAnswer}
+          >
             {answer.text}
           </Answer>
         </li>
