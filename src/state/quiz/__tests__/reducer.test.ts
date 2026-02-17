@@ -1,9 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { quizReducer } from "../reducer";
 import type { QuizState, QuizAction } from "../types";
-import type { QuizQuestion, QuizConfig } from "../../../services/quiz";
+import type { QuizQuestion, QuizConfig, QuizAnswer } from "../../../services/quiz";
 
 describe("quizReducer", () => {
+  const makeAnswer = (text: string, isCorrect = false): QuizAnswer => ({
+    id: `answer-${text.toLowerCase().replace(/\s+/g, "-")}`,
+    text,
+    isCorrectAnswer: isCorrect,
+  });
+
   const mockQuestions: QuizQuestion[] = [
     {
       id: "1",
@@ -11,8 +17,8 @@ describe("quizReducer", () => {
       type: "multiple",
       difficulty: "medium",
       question: "What year was the movie released?",
-      correctAnswer: "1999",
-      options: ["1999", "2000", "1998", "2001"],
+      correctAnswer: makeAnswer("1999", true),
+      options: [makeAnswer("1999", true), makeAnswer("2000"), makeAnswer("1998"), makeAnswer("2001")],
     },
     {
       id: "2",
@@ -20,14 +26,15 @@ describe("quizReducer", () => {
       type: "multiple",
       difficulty: "easy",
       question: "What is H2O?",
-      correctAnswer: "Water",
-      options: ["Water", "Fire", "Air", "Earth"],
+      correctAnswer: makeAnswer("Water", true),
+      options: [makeAnswer("Water", true), makeAnswer("Fire"), makeAnswer("Air"), makeAnswer("Earth")],
     },
   ];
 
   const initialState: QuizState = {
     status: "idle",
     questions: [],
+    userAnswers: null,
     error: null,
     hasCachedQuiz: false,
     lastConfig: { amount: 10, category: 11 },
@@ -98,6 +105,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: mockQuestions,
+        userAnswers: null,
       };
 
       // When
@@ -113,6 +121,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: mockQuestions,
+        userAnswers: null,
       };
 
       // When
@@ -131,6 +140,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: mockQuestions,
+        userAnswers: null,
       };
 
       // When
@@ -151,6 +161,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: mockQuestions,
+        userAnswers: null,
       };
 
       // When
@@ -377,6 +388,7 @@ describe("quizReducer", () => {
       const stateWithData: QuizState = {
         status: "success",
         questions: mockQuestions,
+        userAnswers: null,
         error: null,
         hasCachedQuiz: true,
         lastConfig: { amount: 5, category: 9 },
@@ -428,6 +440,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: [mockQuestions[0]],
+        userAnswers: null,
       };
 
       // When
@@ -487,6 +500,7 @@ describe("quizReducer", () => {
       state = quizReducer(state, {
         type: "LOAD_SUCCESS",
         questions: mockQuestions,
+        userAnswers: null,
       });
 
       // Then
@@ -552,6 +566,7 @@ describe("quizReducer", () => {
       const action: QuizAction = {
         type: "LOAD_SUCCESS",
         questions: [],
+        userAnswers: null,
       };
 
       // When

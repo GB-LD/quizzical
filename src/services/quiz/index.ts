@@ -1,8 +1,8 @@
 export { quizService } from "./QuizService";
 
 export type {
+  QuizAnswer,
   QuizCategory,
   QuizConfig,
   QuizQuestion,
-  QuizState,
 } from "./types";

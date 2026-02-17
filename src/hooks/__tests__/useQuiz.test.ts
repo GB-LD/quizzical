@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { ApiError, NetworkError, ValidationError } from "../../utils/errors";
-import type { QuizQuestion, QuizConfig } from "../../services/quiz";
+import type { QuizQuestion, QuizConfig, QuizAnswer } from "../../services/quiz";
 
 // Mock quiz service
 vi.mock("../../services/quiz", async () => {
@@ -41,6 +41,12 @@ import { quizStorage, quizConfigStorage, quizUserAnswersStorage } from "../../se
 import { useQuiz } from "../useQuiz";
 
 describe("useQuiz", () => {
+  const makeAnswer = (text: string, isCorrect = false): QuizAnswer => ({
+    id: `answer-${text.toLowerCase().replace(/\s+/g, "-")}`,
+    text,
+    isCorrectAnswer: isCorrect,
+  });
+
   const mockQuestions: QuizQuestion[] = [
     {
       id: "1",
@@ -48,8 +54,8 @@ describe("useQuiz", () => {
       type: "multiple",
       difficulty: "medium",
       question: "What year was the movie released?",
-      correctAnswer: "1999",
-      options: ["1999", "2000", "1998", "2001"],
+      correctAnswer: makeAnswer("1999", true),
+      options: [makeAnswer("1999", true), makeAnswer("2000"), makeAnswer("1998"), makeAnswer("2001")],
     },
     {
       id: "2",
@@ -57,8 +63,8 @@ describe("useQuiz", () => {
       type: "multiple",
       difficulty: "easy",
       question: "What is H2O?",
-      correctAnswer: "Water",
-      options: ["Water", "Fire", "Air", "Earth"],
+      correctAnswer: makeAnswer("Water", true),
+      options: [makeAnswer("Water", true), makeAnswer("Fire"), makeAnswer("Air"), makeAnswer("Earth")],
     },
   ];
 

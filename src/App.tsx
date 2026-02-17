@@ -41,7 +41,7 @@ function App() {
 
       <QuizAnswersProvider
         value={{
-          userAnswers: userAnswers,
+          userAnswers: userAnswers ?? {},
           selectAnswers: selectAnswers,
           currentScreen: currentScreen,
         }}
