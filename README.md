@@ -10,6 +10,8 @@
 
 > A modern, interactive trivia quiz app built with React 19 & TypeScript in strict mode. Designed to showcase clean architecture, robust error handling, and professional-grade testing.
 
+[Play the quiz](https://quizzical.gbouin.com/)
+
 ---
 
 ## Features

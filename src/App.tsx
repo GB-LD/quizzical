@@ -3,6 +3,7 @@ import HomeScreen from "./components/pages/HomeScreen";
 import AnswersScreen from "./components/pages/AnswersScreen";
 import QuestionsScreen from "./components/pages/QuestionsScreen";
 import { QuizAnswersProvider } from "./context/answers/QuizAnswersProvider";
+import githubIcon from "../public/github-icon.svg";
 
 function App() {
   const {
@@ -30,7 +31,7 @@ function App() {
   }
 
   return (
-    <main className="background flex justify-center items-center py-12 lg:py-24">
+    <main className="background min-h-screen flex flex-col justify-center items-center py-12 lg:pb-24 lg:pt-12">
       {currentScreen === "quiz_home" && (
         <HomeScreen
           hasCachedQuiz={hasCachedQuiz}
@@ -62,6 +63,18 @@ function App() {
           />
         )}
       </QuizAnswersProvider>
+      <a
+        className="absolute bottom-2 text-xs underline cursor-pointer"
+        href="https://github.com/GB-LD/quizzical"
+        target="_blank"
+      >
+        Check quizzical repository
+        <img
+          className="w-4 h-4 ml-2 inline"
+          src={githubIcon}
+          alt="github icon"
+        />
+      </a>
     </main>
   );
 }
