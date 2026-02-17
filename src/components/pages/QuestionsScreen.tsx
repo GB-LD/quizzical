@@ -29,7 +29,7 @@ export default function QuestionsScreen({
       {isLoading && <span className="loading loading-xl mb-2xl"></span>}
 
       {questionsList.length >= 1 && (
-        <ul className="w-4/5 mb-5">
+        <ul className="w-4/5 mb-12">
           {questionsList.map((question) => (
             <li
               key={question.id}
@@ -41,22 +41,25 @@ export default function QuestionsScreen({
         </ul>
       )}
 
-      {!isLoading && (
-        <Button
-          className="btn-secondary btn-sm block mx-auto"
-          handleBtnClick={() => handleChangeView("quiz_home")}
-        >
-          Back
-        </Button>
-      )}
-
-      <Button
-        className="btn-secondary btn-sm block mx-auto"
-        isDisabled={!quizIsCompleted}
-        handleBtnClick={() => handleChangeView("quiz_answers")}
-      >
-        Check answers
-      </Button>
+      <div className="flex flex-col lg:flex-row gap-4 w-2/4 md:w-1/5 lg:w-1/2">
+        {!isLoading && (
+          <>
+            <Button
+              className="btn-sm btn-outline flex-1"
+              handleBtnClick={() => handleChangeView("quiz_home")}
+            >
+              Back
+            </Button>
+            <Button
+              className="btn-sm btn-outline flex-1"
+              isDisabled={!quizIsCompleted}
+              handleBtnClick={() => handleChangeView("quiz_answers")}
+            >
+              Check answers
+            </Button>
+          </>
+        )}
+      </div>
     </section>
   );
 }

@@ -24,6 +24,11 @@ function App() {
     await loadQuiz({ amount: 10, category: 11 });
   }
 
+  async function loadNewGameView() {
+    clearCache();
+    changeScreen("quiz_home");
+  }
+
   return (
     <main className="background flex justify-center items-center py-12 lg:py-24">
       {currentScreen === "quiz_home" && (
@@ -35,7 +40,11 @@ function App() {
       )}
 
       <QuizAnswersProvider
-        value={{ userAnswers: userAnswers, selectAnswers: selectAnswers, currentScreen: currentScreen }}
+        value={{
+          userAnswers: userAnswers,
+          selectAnswers: selectAnswers,
+          currentScreen: currentScreen,
+        }}
       >
         {currentScreen === "quiz_questions" && (
           <QuestionsScreen
@@ -49,7 +58,7 @@ function App() {
         {currentScreen === "quiz_answers" && (
           <AnswersScreen
             questionsList={questions}
-            handleChangeView={changeScreen}
+            handleNewGame={loadNewGameView}
           />
         )}
       </QuizAnswersProvider>

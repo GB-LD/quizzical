@@ -29,6 +29,10 @@
         --token-color-faded-border: oklch(92% 0.01 270);
         --token-color-faded-text: oklch(78% 0.01 270);
 
+        /* --- Accent (warm) --- */
+        --token-color-accent: oklch(92.4% 0.12 95.746);
+        --token-color-accent-hover: oklch(76.9% 0.188 70.08);
+
         /* --- Decoration --- */
         --token-color-blob-yellow: oklch(97.9% 0.053 101.6);
         --token-color-blob-blue: oklch(93.4% 0.023 248.1);

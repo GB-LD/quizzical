@@ -45,6 +45,26 @@
         padding: var(--token-spacing-md) var(--token-spacing-xl);
     }
 
+    .btn-outline {
+        --_btn-bg: transparent;
+        --_btn-fg: var(--token-color-primary);
+        --_btn-border: var(--token-color-primary);
+        border: var(--token-border-width-medium) solid var(--_btn-border);
+        box-shadow: none;
+    }
+
+    .btn-outline:hover {
+        --_btn-bg: var(--token-color-accent);
+        --_btn-border: var(--token-color-accent);
+    }
+
+    .btn-soft {
+        --_btn-bg: var(--token-color-primary-light);
+        --_btn-fg: var(--token-color-surface);
+        box-shadow: none;
+        opacity: 0.8;
+    }
+
     .btn-sm {
         @apply text-sm;
         padding: var(--token-spacing-sm) var(--token-spacing-lg);
