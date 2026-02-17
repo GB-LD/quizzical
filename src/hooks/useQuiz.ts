@@ -35,7 +35,6 @@ interface UseQuizReturn {
 
 const DEFAULT_CONFIG: QuizConfig = {
   amount: 10,
-  category: 11,
 };
 
 function getInitialState(): QuizState {

@@ -16,7 +16,7 @@ export interface QuizAnswer {
 
 export interface QuizConfig {
   amount: number;
-  category: number;
+  category?: number;
   difficulty?: "easy" | "medium" | "hard";
   type?: "multiple" | "boolean";
 }

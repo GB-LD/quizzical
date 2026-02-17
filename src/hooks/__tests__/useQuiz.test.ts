@@ -140,7 +140,6 @@ describe("useQuiz", () => {
       // Then
       expect(quizService.getQuiz).toHaveBeenCalledWith({
         amount: 10,
-        category: 11,
       });
     });
 
@@ -356,7 +355,6 @@ describe("useQuiz", () => {
       // Then - Verify default config is used
       expect(quizService.getQuiz).toHaveBeenCalledWith({
         amount: 10,
-        category: 11,
       });
     });
   });
@@ -528,7 +526,7 @@ describe("useQuiz", () => {
 
       // Then
       expect(quizStorage.save).toHaveBeenCalledWith(mockQuestions);
-      expect(quizConfigStorage.save).toHaveBeenCalledWith({ amount: 10, category: 11 });
+      expect(quizConfigStorage.save).toHaveBeenCalledWith({ amount: 10 });
     });
 
     it("should update hasCachedQuiz after successful load", async () => {

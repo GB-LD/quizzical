@@ -21,7 +21,7 @@ function App() {
   async function loadRandomQuiz() {
     clearCache();
     changeScreen("quiz_questions");
-    await loadQuiz({ amount: 10, category: 11 });
+    await loadQuiz({ amount: 5 });
   }
 
   async function loadNewGameView() {

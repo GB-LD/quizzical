@@ -2,15 +2,15 @@ const BASE_URL = "https://opentdb.com";
 
 export const ENDPOINTS = {
   quiz: (
-    amount: number = 10,
-    category: number = 11,
+    amount: number,
+    category?: number,
     difficulty?: "easy" | "medium" | "hard",
     type?: "multiple" | "boolean",
   ): string => {
     const params = new URLSearchParams();
     params.append("amount", amount.toString());
-    params.append("category", category.toString());
 
+    if (category) params.append("category", category.toString());
     if (difficulty) params.append("difficulty", difficulty.toString());
     if (type) params.append("type", type.toString());
 

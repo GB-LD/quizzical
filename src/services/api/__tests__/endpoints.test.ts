@@ -3,13 +3,10 @@ import { ENDPOINTS } from "../endpoints";
 
 describe("ENDPOINTS", () => {
   describe("quiz", () => {
-    it("generates URL with default parameters", () => {
-      const url = ENDPOINTS.quiz();
+    it("generates URL with only amount", () => {
+      const url = ENDPOINTS.quiz(10);
 
-      // Test simple
-      expect(url).toBe(
-        "https://opentdb.com/api.php?amount=10&category=11"
-      );
+      expect(url).toBe("https://opentdb.com/api.php?amount=10");
     });
 
     it("generates URL with custom amount and category", () => {
