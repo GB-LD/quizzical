@@ -20,8 +20,8 @@ export default function AnswerScreen({
   );
 
   return (
-    <section className="flex flex-col justify-center items-center">
-      <ul className="w-4/5 mb-12">
+    <section className="flex flex-col justify-center items-center w-4/5 lg:w-3/5">
+      <ul className="mb-12">
         {questionsList.map((question) => (
           <li
             key={question.id}

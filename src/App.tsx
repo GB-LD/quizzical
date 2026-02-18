@@ -4,6 +4,7 @@ import AnswersScreen from "./components/pages/AnswersScreen";
 import QuestionsScreen from "./components/pages/QuestionsScreen";
 import { QuizAnswersProvider } from "./context/answers/QuizAnswersProvider";
 import ConfigQuizScreen from "./components/pages/ConfigQuizScreen";
+import type { QuizConfig } from "./services/quiz";
 
 function App() {
   const {
@@ -25,6 +26,12 @@ function App() {
     await loadQuiz({ amount: 5 });
   }
 
+  async function loadCustomQuiz(quizConfig: QuizConfig) {
+    clearCache();
+    changeScreen("quiz_questions");
+    await loadQuiz(quizConfig);
+  }
+
   async function loadNewGameView() {
     clearCache();
     changeScreen("quiz_home");
@@ -40,7 +47,9 @@ function App() {
         />
       )}
 
-      {currentScreen === "quiz_config" && <ConfigQuizScreen />}
+      {currentScreen === "quiz_config" && (
+        <ConfigQuizScreen loadCustomQuiz={loadCustomQuiz} />
+      )}
 
       <QuizAnswersProvider
         value={{

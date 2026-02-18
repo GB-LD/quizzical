@@ -111,4 +111,4 @@ export const triviaCategories: ApiCategory[] = [
   },
 ];
 
-export const quizDifficulties = ["easy", "medium", "hard"];
+export const quizDifficulties = ["Easy", "Medium", "Hard"];
