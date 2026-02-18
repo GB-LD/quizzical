@@ -23,13 +23,13 @@ export default function QuestionsScreen({
     userAnswers && Object.keys(userAnswers).length === questionsList.length;
 
   return (
-    <section className="flex flex-col justify-center items-center">
+    <section className="flex flex-col justify-center items-center w-4/5 lg:w-3/5">
       {error && <p className="mb-2xl">{error}</p>}
 
       {isLoading && <span className="loading loading-xl mb-2xl"></span>}
 
       {questionsList.length >= 1 && (
-        <ul className="w-4/5 mb-12">
+        <ul className="w-full mb-12">
           {questionsList.map((question) => (
             <li
               key={question.id}
@@ -41,7 +41,7 @@ export default function QuestionsScreen({
         </ul>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-4 w-2/4 md:w-1/5 lg:w-1/2">
+      <div className="flex flex-col lg:flex-row gap-4 lg:w-3/5">
         {!isLoading && (
           <>
             <Button
@@ -50,13 +50,15 @@ export default function QuestionsScreen({
             >
               Back
             </Button>
-            <Button
-              className="btn-sm btn-outline flex-1"
-              isDisabled={!quizIsCompleted}
-              handleBtnClick={() => handleChangeView("quiz_answers")}
-            >
-              Check answers
-            </Button>
+            {!error && (
+              <Button
+                className="btn-sm btn-outline flex-1"
+                isDisabled={!quizIsCompleted}
+                handleBtnClick={() => handleChangeView("quiz_answers")}
+              >
+                Check answers
+              </Button>
+            )}
           </>
         )}
       </div>

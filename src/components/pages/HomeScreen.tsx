@@ -20,17 +20,17 @@ export default function HomeScreen({
           className="w-full"
           handleBtnClick={() => handleChangeView("quiz_questions")}
         >
-          Continue Quiz
+          Continue quiz
         </Button>
       )}
       <Button
         className="w-full"
         handleBtnClick={() => handleChangeView("quiz_config")}
       >
-        New personal quiz
+        New custom quiz
       </Button>
       <Button className="w-full" handleBtnClick={loadRandomQuiz}>
-        New Random Quiz
+        New random quiz
       </Button>
     </section>
   );

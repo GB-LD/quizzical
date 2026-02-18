@@ -4,8 +4,15 @@ import {
   triviaCategories,
   quizDifficulties,
 } from "../../services/api/constants";
+import type { QuizConfig } from "../../services/quiz";
 
-export default function ConfigQuizScreen() {
+interface ConfigQuizScreenProps {
+  loadCustomQuiz: (quizConfig: QuizConfig) => void;
+}
+
+export default function ConfigQuizScreen({
+  loadCustomQuiz,
+}: ConfigQuizScreenProps) {
   const [rangeValue, setRangeValue] = useState(10);
 
   function handleChangeRange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -16,11 +23,18 @@ export default function ConfigQuizScreen() {
     const numOfQuestions = formData.get("numOfQuestions");
     const category = formData.get("category");
     const difficulty = formData.get("difficulty");
-    console.log(numOfQuestions, category, difficulty);
+    const quizConfig: QuizConfig = {
+      amount: numOfQuestions ? Number(numOfQuestions) : 5,
+      category: category ? Number(category) : undefined,
+      difficulty: difficulty
+        ? (difficulty as QuizConfig["difficulty"])
+        : undefined,
+    };
+    loadCustomQuiz(quizConfig);
   }
 
   return (
-    <section className="flex flex-col justify-center items-center">
+    <section className="flex flex-col justify-center items-center w-4/5 lg:w-3/5">
       <form
         action={getPersonalQuiz}
         className="border border-divider rounded-lg p-8"
@@ -60,7 +74,7 @@ export default function ConfigQuizScreen() {
         >
           <option value="">Any Difficulty</option>
           {quizDifficulties.map((d) => (
-            <option key={d} value={d}>
+            <option key={d.toLowerCase()} value={d.toLowerCase()}>
               {d}
             </option>
           ))}
