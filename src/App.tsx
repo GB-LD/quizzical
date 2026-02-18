@@ -3,7 +3,7 @@ import HomeScreen from "./components/pages/HomeScreen";
 import AnswersScreen from "./components/pages/AnswersScreen";
 import QuestionsScreen from "./components/pages/QuestionsScreen";
 import { QuizAnswersProvider } from "./context/answers/QuizAnswersProvider";
-import githubIcon from "../public/github-icon.svg";
+import ConfigQuizScreen from "./components/pages/ConfigQuizScreen";
 
 function App() {
   const {
@@ -40,6 +40,8 @@ function App() {
         />
       )}
 
+      {currentScreen === "quiz_config" && <ConfigQuizScreen />}
+
       <QuizAnswersProvider
         value={{
           userAnswers: userAnswers ?? {},
@@ -71,7 +73,7 @@ function App() {
         Check quizzical repository
         <img
           className="w-4 h-4 ml-2 inline"
-          src={githubIcon}
+          src="/github-icon.svg"
           alt="github icon"
         />
       </a>
