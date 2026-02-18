@@ -23,6 +23,12 @@ export default function HomeScreen({
           Continue Quiz
         </Button>
       )}
+      <Button
+        className="w-full"
+        handleBtnClick={() => handleChangeView("quiz_config")}
+      >
+        New personal quiz
+      </Button>
       <Button className="w-full" handleBtnClick={loadRandomQuiz}>
         New Random Quiz
       </Button>

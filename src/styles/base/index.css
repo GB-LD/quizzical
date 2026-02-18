@@ -5,6 +5,8 @@
         /* --- Base --- */
         --token-color-background: oklch(97.6% 0.006 264.5);
         --token-color-surface: oklch(100% 0 0);
+        --token-color-surface-200: oklch(96% 0 0);
+        --token-color-surface-300: oklch(90% 0 0);
 
         /* --- Primary --- */
         --token-color-primary: oklch(49.2% 0.108 272.9);
