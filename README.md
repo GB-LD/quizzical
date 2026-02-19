@@ -17,6 +17,7 @@
 ## Features
 
 - **Interactive quiz** with trivia questions from [Open Trivia DB](https://opentdb.com/)
+- **Configurable** - choose category, difficulty, number of questions and answer type
 - **Session persistence** - resume your quiz where you left off (SessionStorage caching)
 - **Resilient networking** - automatic retry with exponential backoff, request deduplication
 - **Typed error handling** - custom error classes with type guards for safe discrimination
